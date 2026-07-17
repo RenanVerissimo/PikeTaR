@@ -16,7 +16,7 @@ export default function Home() {
       <Text>Olá Mundo!</Text>
 
       <Button onPress={() => router.push('/src/layout')}>
-        Testeeeeee
+        Teste
       </Button>
     </View>
   );
