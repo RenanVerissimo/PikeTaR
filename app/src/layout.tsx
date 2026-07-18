@@ -3,10 +3,12 @@ import { View, Text } from 'react-native';
 import { Button } from '@react-navigation/elements';
 import { useRouter } from 'expo-router';
 
+import { scheduleTestNotificationAsync } from '@/hooks/use-push-notifications';
+
 
 export default function Layout({ children }: { children: React.ReactNode }) {
     const router = useRouter();
-
+    
     return (
 
         <View
@@ -20,6 +22,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
             <Button onPress={() => router.push('/')}>
                 Voltar
+            </Button>
+
+            <Button onPress={scheduleTestNotificationAsync}>
+                Testar notificacao
             </Button>
         </View>
     );
