@@ -53,7 +53,7 @@ export async function registerForPushNotificationsAsync() {
   return token.data;
 }
 
-export async function scheduleTestNotificationAsync() {
+export async function exibirNotificacao() {
   if (Platform.OS === 'web') {
     const message = 'Teste as notificacoes em um aparelho Android ou iOS.';
 

@@ -3,7 +3,7 @@ import { View, Text } from 'react-native';
 import { Button } from '@react-navigation/elements';
 import { useRouter } from 'expo-router';
 
-import { scheduleTestNotificationAsync } from '@/hooks/use-push-notifications';
+import { exibirNotificacao } from '@/hooks/use-push-notifications';
 
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -24,7 +24,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 Voltar
             </Button>
 
-            <Button onPress={scheduleTestNotificationAsync}>
+            <Button onPress={() => {
+                void exibirNotificacao();
+            }}>
                 Testar notificacao
             </Button>
         </View>
