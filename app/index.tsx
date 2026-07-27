@@ -123,90 +123,98 @@ export default function Home() {
 
       <View style={{ gap: 12 }}>
         {tarefas.map((tarefa) => (
-          <Swipeable key={tarefa.id}>
-            <View
-              style={{
-                alignItems: 'center',
-                backgroundColor: '#ffffff',
-                borderColor: '#e2e8f0',
-                borderRadius: 8,
-                borderWidth: 1,
-                flexDirection: 'row',
-                gap: 14,
-                minHeight: 65,
-                overflow: 'hidden',
-                paddingRight: 14,
-                shadowColor: '#0f172a',
-                shadowOffset: { width: 0, height: 6 },
-                shadowOpacity: 0.06,
-                shadowRadius: 12,
-                elevation: 2,
-              }}
-            >
-              <View
-                style={{
-                  alignSelf: 'stretch',
-                  backgroundColor: tarefa.cor,
-                  width: 6,
-                }}
-              />
-
-              <View style={{ flex: 1, gap: 4 }}>
-                <Text
-                  style={{
-                    color: '#0f172a',
-                    fontSize: 16,
-                    fontWeight: '500',
-                  }}
-                >
-                  {tarefa.descricao}
-                </Text>
-                <Text
-                  style={{
-                    fontSize: 12,
-                    color: '#1d4ed8',
-                    fontWeight: '600',
-                    marginTop: 4,
-                  }}
-                >
-                  {/* {tarefa.hora} */}
-                </Text>
+          <Swipeable 
+            key={tarefa.id}
+            overshootLeft={false}
+            renderLeftActions={() => (
+              <View>
+                <Text> TESTE</Text> 
               </View>
-
+              )}
+              >
               <View
                 style={{
                   alignItems: 'center',
-                  backgroundColor: tarefa.fundo,
-                  borderRadius: 999,
+                  backgroundColor: '#ffffff',
+                  borderColor: '#e2e8f0',
+                  borderRadius: 8,
+                  borderWidth: 1,
                   flexDirection: 'row',
-                  gap: 6,
-                  paddingHorizontal: 10,
-                  paddingVertical: 6,
+                  gap: 14,
+                  minHeight: 65,
+                  overflow: 'hidden',
+                  paddingRight: 14,
+                  shadowColor: '#0f172a',
+                  shadowOffset: { width: 0, height: 6 },
+                  shadowOpacity: 0.06,
+                  shadowRadius: 12,
+                  elevation: 2,
                 }}
               >
                 <View
                   style={{
+                    alignSelf: 'stretch',
                     backgroundColor: tarefa.cor,
-                    borderRadius: 999,
-                    height: 8,
-                    width: 8,
+                    width: 6,
                   }}
                 />
-                <Text
+
+                <View style={{ flex: 1, gap: 4 }}>
+                  <Text
+                    style={{
+                      color: '#0f172a',
+                      fontSize: 16,
+                      fontWeight: '500',
+                    }}
+                  >
+                    {tarefa.descricao}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: '#1d4ed8',
+                      fontWeight: '600',
+                      marginTop: 4,
+                    }}
+                  >
+                    {/* {tarefa.hora} */}
+                  </Text>
+                </View>
+
+                <View
                   style={{
-                    color: '#0f172a',
-                    fontSize: 12,
-                    fontWeight: '700',
-                    textTransform: 'uppercase',
+                    alignItems: 'center',
+                    backgroundColor: tarefa.fundo,
+                    borderRadius: 999,
+                    flexDirection: 'row',
+                    gap: 6,
+                    paddingHorizontal: 10,
+                    paddingVertical: 6,
                   }}
                 >
-                  {tarefa.importancia}
-                </Text>
+                  <View
+                    style={{
+                      backgroundColor: tarefa.cor,
+                      borderRadius: 999,
+                      height: 8,
+                      width: 8,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      color: '#0f172a',
+                      fontSize: 12,
+                      fontWeight: '700',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    {tarefa.importancia}
+                  </Text>
+                </View>
               </View>
-            </View>
           </Swipeable>
         ))}
-      </View>
-    </ScrollView>
+    </View>
+    </ScrollView >
   );
 }
