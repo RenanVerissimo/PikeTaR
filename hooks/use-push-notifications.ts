@@ -4,6 +4,9 @@ import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import { Href, router } from 'expo-router';
 
+const TEST_NOTIFICATION_CATEGORY = 'teste_notificacao';
+const TEST_NOTIFICATION_OK_ACTION = 'OK';
+
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowBanner: true,
@@ -12,6 +15,22 @@ Notifications.setNotificationHandler({
     shouldSetBadge: false,
   }),
 });
+
+async function registerNotificationCategoriesAsync() {
+  if (Platform.OS === 'web') {
+    return;
+  }
+
+  await Notifications.setNotificationCategoryAsync(TEST_NOTIFICATION_CATEGORY, [
+    {
+      identifier: TEST_NOTIFICATION_OK_ACTION,
+      buttonTitle: 'OK',
+      options: {
+        opensAppToForeground: false,
+      },
+    },
+  ]);
+}
 
 export async function registerForPushNotificationsAsync() {
   if (Platform.OS === 'web') {
@@ -27,6 +46,8 @@ export async function registerForPushNotificationsAsync() {
     });
   }
 
+  await registerNotificationCategoriesAsync();
+
   const { status: existingStatus } = await Notifications.getPermissionsAsync();
   let finalStatus = existingStatus;
 
@@ -36,7 +57,7 @@ export async function registerForPushNotificationsAsync() {
   }
 
   if (finalStatus !== 'granted') {
-    Alert.alert('Notificacoes bloqueadas', 'Ative as notificacoes do PikeTaR nas configuracoes do celular.');
+    Alert.alert('Notificações bloqueadas', 'Ative as notificações do PikeTaR nas configurações do celular.');
     return null;
   }
 
@@ -65,15 +86,18 @@ export async function exibirNotificacao() {
     return;
   }
 
+  await registerNotificationCategoriesAsync();
+
   await Notifications.scheduleNotificationAsync({
     content: {
       title: 'PikeTaR',
-      body: 'Notificacao de teste funcionando.',
+      body: 'Notificação de teste funcionando.',
       data: { url: '/' },
+      categoryIdentifier: TEST_NOTIFICATION_CATEGORY,
     },
     trigger: {
       type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
-      seconds: 2,
+      seconds: 1,
     },
   });
 }
@@ -92,14 +116,25 @@ function useNotificationNavigation() {
       }
     }
 
+    function handleResponse(response: Notifications.NotificationResponse) {
+      if (response.actionIdentifier === TEST_NOTIFICATION_OK_ACTION) {
+        console.log('Usuario confirmou que viu a notificacao.');
+        return;
+      }
+
+      if (response.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER) {
+        redirect(response.notification);
+      }
+    }
+
     Notifications.getLastNotificationResponseAsync().then((response) => {
       if (response?.notification) {
-        redirect(response.notification);
+        handleResponse(response);
       }
     });
 
     const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
-      redirect(response.notification);
+      handleResponse(response);
     });
 
     return () => {

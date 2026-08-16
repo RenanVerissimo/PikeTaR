@@ -78,7 +78,7 @@ export default function Home() {
             shadowRadius: 16,
             elevation: 3,
           }}
-          onPress={() => router.push('/src/layout')}
+          onPress={() => router.push('/src/pages/addTarefa')}
         >
           <Text
             style={{
