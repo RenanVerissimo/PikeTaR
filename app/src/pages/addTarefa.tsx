@@ -4,14 +4,18 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import SnackbarMessage from '../utils/snackbarMessage';
 import React from 'react';
+import { TextInput } from 'react-native-gesture-handler';
 
 export default function AddTarefa() {
     const [snackbarVisivel, setSnackbarVisivel] = useState(false);
     const [gravando, setGravando] = useState(false);
+    const [textoTarefa, SetTextoTarefa] = useState("");
+    const [tarefaExibida, setTarefaExibida] = useState("");
 
 
     function handleSalvarTarefa() {
         console.log('Tarefa salva com sucesso!');
+        setTarefaExibida(textoTarefa);
         setSnackbarVisivel(true);
 
         setTimeout(() => {
@@ -27,9 +31,7 @@ export default function AddTarefa() {
     function handleGravacao() {
         console.log("gravando!");
         setGravando(!gravando);
-
     }
-
 
     return (
         <>
@@ -106,21 +108,43 @@ export default function AddTarefa() {
                 ) : null}
 
 
+                <TextInput
+                    value={textoTarefa}
+                    onChangeText={SetTextoTarefa}
+                    placeholder="Digite aqui"
+                    style={{
+                        marginTop: 32,
+                        borderColor: "black",
+                        height: 80,
+                        width: 240,
+                        //borderBlockColor: "black",
+                        color: '#000',
+                        borderWidth: 1,
+                        borderRadius: 8,
+                        fontSize: 16,
+                    }}
+                >
+                </TextInput>
 
+                {tarefaExibida ? (
+                <Text>{tarefaExibida}</Text>
+                ): null}
+                
             </View>
+
             <Pressable
                 onPress={handleSalvarTarefa}
                 style={({ pressed }) => ({
                     position: 'absolute',
-                    left: 16,
-                    right: 16,
-                    bottom: 96,
+                    left: 72,
+                    right: 72,
+                    bottom: 82,
                     paddingVertical: 14,
                     paddingHorizontal: 16,
                     borderWidth: 1,
                     borderColor: '#000000',
                     borderRadius: 8,
-                    backgroundColor: pressed ? '#e5e7eb' : 'transparent',
+                    backgroundColor: pressed ? '#e6ebe5' : '#188b01',
                     alignItems: 'center',
                 })}
             >
