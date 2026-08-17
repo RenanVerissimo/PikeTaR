@@ -7,6 +7,8 @@ import React from 'react';
 
 export default function AddTarefa() {
     const [snackbarVisivel, setSnackbarVisivel] = useState(false);
+    const [gravando, setGravando] = useState(false);
+
 
     function handleSalvarTarefa() {
         console.log('Tarefa salva com sucesso!');
@@ -22,6 +24,12 @@ export default function AddTarefa() {
         router.push('/')
     }
 
+    function handleGravacao() {
+        console.log("gravando!");
+        setGravando(!gravando);
+
+    }
+
 
     return (
         <>
@@ -33,15 +41,12 @@ export default function AddTarefa() {
                     alignItems: 'flex-start',
                     paddingLeft: 12,
                     paddingBottom: 12,
-                    //backgroundColor: '#ff0404',
                 }}
             >
                 <Pressable
                     onPress={() => voltar()}
                     style={({ pressed }) => ({
                         position: 'absolute',
-                        //backgroundColor: 'red',
-                        //zIndex: 10,
                         top: 60,
                         left: 12,
                         width: 48,
@@ -70,19 +75,38 @@ export default function AddTarefa() {
                 }}
             >
                 <Pressable
-                    onPress={() => { }}
+                    onPress={handleGravacao}
                     style={({ pressed }) => ({
                         width: 64,
                         height: 64,
                         borderRadius: 32,
-                        backgroundColor: pressed ? '#000f6177' : '#0347cf',
+                        backgroundColor: gravando
+                            ? '#dc2626'
+                            : pressed
+                                ? '#000f6177'
+                                : '#0347cf',
                         alignItems: 'center',
                         justifyContent: 'center',
                     })}
                 >
-                    <MaterialIcons name="mic" size={28} color="#ffffff" />
+                    <MaterialIcons name={gravando ? 'stop' : 'mic'}
+                        size={28}
+                        color="#ffffff"
+                    />
+
 
                 </Pressable>
+
+                {gravando ? (
+                    <Text
+                        style={{
+                            marginTop: 16,
+                            fontFamily: "Arial",
+                        }}>Gravando</Text>
+                ) : null}
+
+
+
             </View>
             <Pressable
                 onPress={handleSalvarTarefa}
