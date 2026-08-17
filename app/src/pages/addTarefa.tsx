@@ -40,6 +40,30 @@ export default function AddTarefa() {
                 />
             </Pressable>
 
+
+            <View
+                style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'flex-start',
+                    paddingTop: 140,
+                }}
+            >
+                <Pressable
+                    onPress={() => { }}
+                    style={({ pressed }) => ({
+                        width: 64,
+                        height: 64,
+                        borderRadius: 32,
+                        backgroundColor: pressed ? '#000f6177' : '#0347cf',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    })}
+                >
+                    <MaterialIcons name="mic" size={28} color="#ffffff" />
+
+                </Pressable>
+            </View>
             <Pressable
                 onPress={handleSalvarTarefa}
                 style={({ pressed }) => ({
