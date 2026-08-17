@@ -3,6 +3,7 @@ import { Pressable, ScrollView, Text, Touchable, TouchableOpacity, View } from '
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { tarefas } from '../src/utils/mock';
 import { useState } from 'react';
+import React from 'react';
 
 export default function Home() {
   const router = useRouter();
