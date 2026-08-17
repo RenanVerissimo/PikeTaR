@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+/* import { useEffect, useState } from 'react';
 import { Alert, Platform } from 'react-native';
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
@@ -158,3 +158,4 @@ export function usePushNotifications() {
 
   return expoPushToken;
 }
+ */

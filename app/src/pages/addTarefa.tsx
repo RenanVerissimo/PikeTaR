@@ -113,7 +113,7 @@ export default function AddTarefa() {
                     onChangeText={SetTextoTarefa}
                     placeholder="Digite aqui"
                     style={{
-                        marginTop: 32,
+                        marginTop: 84,
                         borderColor: "black",
                         height: 80,
                         width: 240,
