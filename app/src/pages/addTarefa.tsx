@@ -95,16 +95,19 @@ export default function AddTarefa() {
                         size={28}
                         color="#ffffff"
                     />
-
-
                 </Pressable>
 
                 {gravando ? (
                     <Text
                         style={{
-                            marginTop: 16,
+                            position: 'absolute',
+                            top: 210,
                             fontFamily: "Arial",
-                        }}>Gravando</Text>
+                            color: '#dc2626',
+                        }}
+                    >
+                        Gravando
+                    </Text>
                 ) : null}
 
 
@@ -113,7 +116,7 @@ export default function AddTarefa() {
                     onChangeText={SetTextoTarefa}
                     placeholder="Digite aqui"
                     style={{
-                        marginTop: 84,
+                        marginTop: 48,
                         borderColor: "black",
                         height: 80,
                         width: 240,
@@ -127,9 +130,9 @@ export default function AddTarefa() {
                 </TextInput>
 
                 {tarefaExibida ? (
-                <Text>{tarefaExibida}</Text>
-                ): null}
-                
+                    <Text>{tarefaExibida}</Text>
+                ) : null}
+
             </View>
 
             <Pressable
