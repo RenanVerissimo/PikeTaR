@@ -17,30 +17,49 @@ export default function AddTarefa() {
         }, 3000);
     }
 
-    return (
-        <View style={{ flex: 1 }}>
-            <Pressable
-                onPress={() => router.back()}
-                style={({ pressed }) => ({
-                    position: 'absolute',
-                    top: 60,
-                    left: 12,
-                    width: 48,
-                    height: 48,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: 8,
-                    backgroundColor: pressed ? '#e5e7eb' : 'transparent',
-                })}
-            >
-                <MaterialIcons
-                    name="arrow-back-ios"
-                    size={24}
-                    color="#000"
-                    style={{ transform: [{ translateX: 5 }] }}
-                />
-            </Pressable>
+    function voltar() {
+        console.log('Voltar para a tela inicial');
+        router.push('/')
+    }
 
+
+    return (
+        <>
+
+            <View
+                style={{
+                    height: 120,
+                    justifyContent: 'flex-end',
+                    alignItems: 'flex-start',
+                    paddingLeft: 12,
+                    paddingBottom: 12,
+                    //backgroundColor: '#ff0404',
+                }}
+            >
+                <Pressable
+                    onPress={() => voltar()}
+                    style={({ pressed }) => ({
+                        position: 'absolute',
+                        //backgroundColor: 'red',
+                        //zIndex: 10,
+                        top: 60,
+                        left: 12,
+                        width: 48,
+                        height: 48,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: 8,
+                        backgroundColor: pressed ? '#e5e7eb' : 'transparent',
+                    })}
+                >
+                    <MaterialIcons
+                        name="arrow-back-ios"
+                        size={24}
+                        color="#000"
+                        style={{ transform: [{ translateX: 5 }] }}
+                    />
+                </Pressable>
+            </View>
 
             <View
                 style={{
@@ -90,6 +109,6 @@ export default function AddTarefa() {
                 visible={snackbarVisivel}
                 message="Tarefa adicionada com sucesso!"
             />
-        </View>
+        </>
     );
 }
