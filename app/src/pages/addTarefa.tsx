@@ -3,6 +3,7 @@ import { Pressable, Text, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import SnackbarMessage from '../utils/snackbarMessage';
+import React from 'react';
 
 export default function AddTarefa() {
     const [snackbarVisivel, setSnackbarVisivel] = useState(false);
