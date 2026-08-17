@@ -19,7 +19,7 @@ export default function AddTarefa() {
     return (
         <View style={{ flex: 1 }}>
             <Pressable
-                onPress={() => router.push('/')}
+                onPress={() => router.back()}
                 style={({ pressed }) => ({
                     position: 'absolute',
                     top: 60,
