@@ -19,6 +19,7 @@ import {
     useAudioRecorder,
     useAudioRecorderState,
 } from 'expo-audio';
+import React from 'react';
 
 export default function AddTarefa() {
     const [snackbarVisivel, setSnackbarVisivel] = useState(false);
