@@ -115,16 +115,19 @@ export default function AddTarefa() {
                     value={textoTarefa}
                     onChangeText={SetTextoTarefa}
                     placeholder="Digite aqui"
+                    multiline={true}
                     style={{
+                        textAlignVertical: 'top',
                         marginTop: 48,
                         borderColor: "black",
                         height: 80,
                         width: 240,
                         //borderBlockColor: "black",
                         color: '#000',
-                        borderWidth: 1,
+                        borderWidth: 2,
                         borderRadius: 8,
                         fontSize: 16,
+                        padding: 12
                     }}
                 >
                 </TextInput>
@@ -144,14 +147,21 @@ export default function AddTarefa() {
                     bottom: 82,
                     paddingVertical: 14,
                     paddingHorizontal: 16,
-                    borderWidth: 1,
+                    borderWidth: 2,
                     borderColor: '#000000',
-                    borderRadius: 8,
+                    borderRadius: 32,
                     backgroundColor: pressed ? '#e6ebe5' : '#188b01',
                     alignItems: 'center',
                 })}
             >
-                <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center' }}>
+                <Text style={{
+                    fontSize: 18,
+                    //fontWeight: 'bold',
+                    textAlign: 'center',
+                    fontFamily: "Arial",
+
+                }}
+                >
                     Adicionar Tarefa
                 </Text>
             </Pressable>

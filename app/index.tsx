@@ -104,7 +104,7 @@ export default function Home() {
       </View>
 
 
-      <View style={{ gap: 12 }}>
+      <View style={{ gap: 12, top: 42 }}>
         {listaTarefas.map((tarefa) => (
           <Swipeable
             key={tarefa.id}
