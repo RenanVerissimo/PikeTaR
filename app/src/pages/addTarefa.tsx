@@ -6,12 +6,23 @@ import SnackbarMessage from '../utils/snackbarMessage';
 import React from 'react';
 import { TextInput } from 'react-native-gesture-handler';
 
+import {
+    GoogleSans_400Regular,
+    useFonts,
+} from '@expo-google-fonts/google-sans';
+
 export default function AddTarefa() {
     const [snackbarVisivel, setSnackbarVisivel] = useState(false);
     const [gravando, setGravando] = useState(false);
     const [textoTarefa, SetTextoTarefa] = useState("");
     const [tarefaExibida, setTarefaExibida] = useState("");
+    const [fontesCarregadas, erroFonte] = useFonts({
+        GoogleSans_400Regular
+    });
 
+    if (!fontesCarregadas && !erroFonte) {
+        return null;
+    }
 
     function handleSalvarTarefa() {
         console.log('Tarefa salva com sucesso!');
@@ -142,27 +153,29 @@ export default function AddTarefa() {
                 onPress={handleSalvarTarefa}
                 style={({ pressed }) => ({
                     position: 'absolute',
-                    left: 72,
-                    right: 72,
-                    bottom: 82,
+                    left: 48,
+                    right: 48,
+                    bottom: 60,
                     paddingVertical: 14,
-                    paddingHorizontal: 16,
-                    borderWidth: 2,
+                    paddingHorizontal: 22,
+                    borderWidth: 1,
                     borderColor: '#000000',
                     borderRadius: 32,
                     backgroundColor: pressed ? '#e6ebe5' : '#188b01',
                     alignItems: 'center',
+                    justifyContent: 'center',
                 })}
             >
-                <Text style={{
-                    fontSize: 18,
-                    //fontWeight: 'bold',
-                    textAlign: 'center',
-                    fontFamily: "Arial",
-
-                }}
+                <Text
+                    style={{
+                        fontSize: 16,
+                        lineHeight: 20,
+                        fontFamily: 'GoogleSans_400Regular',
+                        textAlign: 'center',
+                        includeFontPadding: false,
+                    }}
                 >
-                    Adicionar Tarefa
+                    Salvar
                 </Text>
             </Pressable>
 
