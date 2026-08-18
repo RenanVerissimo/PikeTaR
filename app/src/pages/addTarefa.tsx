@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
@@ -113,7 +113,7 @@ export default function AddTarefa() {
                         style={{
                             position: 'absolute',
                             top: 210,
-                            fontFamily: "Arial",
+                            fontFamily: "GoogleSans_400Regular",
                             color: '#dc2626',
                         }}
                     >
@@ -138,7 +138,8 @@ export default function AddTarefa() {
                         borderWidth: 2,
                         borderRadius: 8,
                         fontSize: 16,
-                        padding: 12
+                        padding: 12,
+                        fontFamily: "GoogleSans_400Regular"
                     }}
                 >
                 </TextInput>
