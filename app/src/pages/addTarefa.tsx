@@ -35,7 +35,8 @@ export default function AddTarefa() {
     });
     const [prioridade, setPrioridade] = useState("");
     const opcoesPrioridade = ["Alto", "Médio", "Baixo"];
-
+    const opcoesPeriodo = ["15min", "30min", "1hora", "Outro"]
+    const [periodo, setPeriodo] = useState("");
 
     function handleSalvarTarefa() {
         console.log('Tarefa salva com sucesso!');
@@ -350,7 +351,8 @@ export default function AddTarefa() {
                                         paddingHorizontal: 24,
                                         borderRadius: 8,
                                         borderWidth: 1,
-                                        borderColor: selecionado ? corPrioridade : "#ccc",
+                                        //borderColor: selecionado ? corPrioridade : "#ccc",
+                                        borderColor: "black",
                                         backgroundColor: selecionado ? corPrioridade : "#fff",
                                     }}
                                 >
@@ -371,7 +373,7 @@ export default function AddTarefa() {
                 <View
                     style={{
                         borderWidth: 1,
-                        margin: 30,
+                        marginTop: 30,
                         backgroundColor: "#a9b9be6c",
                         borderRadius: 8,
                         paddingHorizontal: 12,
@@ -381,13 +383,10 @@ export default function AddTarefa() {
                 >
                     <Text
                         style={{
-                            //marginTop: 8,
                             fontFamily: "GoogleSans_400Regular",
-                            fontSize: 16
-
                         }}
                     >
-                        Descreva a tarefa
+                        DESCREVA A TAREFA
                     </Text>
                     <TextInput
                         value={textoTarefa}
@@ -410,7 +409,60 @@ export default function AddTarefa() {
                         <Text>{tarefaExibida}</Text>
                     ) : null}
                 </View>
+
+                <View
+                    style={{
+                        borderWidth: 1,
+                        marginTop: 30,
+                        backgroundColor: "#a9b9be6c",
+                        borderRadius: 8,
+                        paddingHorizontal: 12,
+                        paddingVertical: 12,
+                        width: 330,
+                        height: 120,
+                    }}
+                >
+
+                    <Text
+                        style={{
+                            fontFamily: "GoogleSans_400Regular",
+                            textAlign: "center"
+
+                        }}
+                    >
+                        AGENDE O PERIODO DA NOTIFICAÇÃO
+                    </Text>
+
+                    <View style={{
+                        flexDirection: "row",
+                        gap: 24,
+                        
+                        justifyContent: "center",
+                    }}>
+                        {opcoesPeriodo.map((periodo) => {
+                            return (
+                                <Pressable
+                                    key={periodo}
+                                    onPress={() => setPrioridade(periodo)}
+                                    style={{
+                                        paddingVertical: 8,
+                                        paddingHorizontal: 8,
+                                        borderRadius: 8,
+                                        borderWidth: 1,
+                                        borderColor: "#9c3131",
+                                        backgroundColor: "#ffffff",
+                                    }}
+                                >
+                                    <Text>{periodo}</Text>
+                                </Pressable>
+                            );
+
+                        })}
+                    </View>
+                </View>
             </View>
+
+
 
             <Pressable
                 onPress={handleSalvarTarefa}
