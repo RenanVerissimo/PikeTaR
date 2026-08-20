@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Alert, Pressable, Text, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import SnackbarMessage from '../utils/snackbarMessage';
-import React from 'react';
 import { TextInput } from 'react-native-gesture-handler';
 
 import {
@@ -11,18 +10,33 @@ import {
     useFonts,
 } from '@expo-google-fonts/google-sans';
 
+import {
+    AudioModule,
+    RecordingPresets,
+    setAudioModeAsync,
+    useAudioPlayer,
+    useAudioPlayerStatus,
+    useAudioRecorder,
+    useAudioRecorderState,
+} from 'expo-audio';
+import React from 'react';
+
 export default function AddTarefa() {
     const [snackbarVisivel, setSnackbarVisivel] = useState(false);
-    const [gravando, setGravando] = useState(false);
     const [textoTarefa, SetTextoTarefa] = useState("");
     const [tarefaExibida, setTarefaExibida] = useState("");
+    const [uriGravacao, setUriGravacao] = useState<string | null>(null);
+    const gravador = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
+    const estadoGravador = useAudioRecorderState(gravador);
+    const player = useAudioPlayer(null);
+    const estadoPlayer = useAudioPlayerStatus(player);
     const [fontesCarregadas, erroFonte] = useFonts({
         GoogleSans_400Regular
     });
-
-    if (!fontesCarregadas && !erroFonte) {
-        return null;
-    }
+    const [prioridade, setPrioridade] = useState("");
+    const opcoesPrioridade = ["Alto", "Médio", "Baixo"];
+    const opcoesPeriodo = ["15min", "30min", "1hora", "Outro"]
+    const [periodo, setPeriodo] = useState("");
 
     function handleSalvarTarefa() {
         console.log('Tarefa salva com sucesso!');
@@ -39,9 +53,82 @@ export default function AddTarefa() {
         router.push('/')
     }
 
-    function handleGravacao() {
-        console.log("gravando!");
-        setGravando(!gravando);
+    async function handleGravacao() {
+        try {
+            if (estadoGravador.isRecording) {
+                await gravador.stop();
+
+                if (gravador.uri) {
+                    setUriGravacao(gravador.uri);
+                    player.replace(gravador.uri);
+                    console.log('Gravação salva:', gravador.uri);
+                }
+
+                return;
+            }
+
+            if (estadoPlayer.playing) {
+                player.pause();
+            }
+
+            await gravador.prepareToRecordAsync();
+            gravador.record();
+        } catch (erro) {
+            console.error('Erro ao gravar:', erro);
+            Alert.alert('Erro', 'Não foi possível realizar a gravação.');
+        }
+    }
+
+    async function handleReproduzirGravacao() {
+        if (!uriGravacao) {
+            return;
+        }
+
+        if (estadoPlayer.playing) {
+            player.pause();
+            return;
+        }
+
+        if (estadoPlayer.didJustFinish ||
+            (estadoPlayer.duration > 0 && estadoPlayer.currentTime >= estadoPlayer.duration)) {
+            await player.seekTo(0);
+        }
+
+        player.play();
+    }
+
+    async function handleLimparGravacao() {
+        if (estadoPlayer.playing) {
+            player.pause();
+        }
+
+        await player.seekTo(0);
+        setUriGravacao(null);
+    }
+
+    useEffect(() => {
+        async function configurarAudio() {
+            const permissao = await AudioModule.requestRecordingPermissionsAsync();
+
+            if (!permissao.granted) {
+                Alert.alert(
+                    'Permissão necessária',
+                    'Permita o acesso ao microfone para gravar uma tarefa.'
+                );
+                return;
+            }
+
+            await setAudioModeAsync({
+                allowsRecording: true,
+                playsInSilentMode: true,
+            });
+        }
+
+        configurarAudio();
+    }, []);
+
+    if (!fontesCarregadas && !erroFonte) {
+        return null;
     }
 
     return (
@@ -79,7 +166,7 @@ export default function AddTarefa() {
                 </Pressable>
             </View>
 
-            <View
+            {/*             <View
                 style={{
                     flex: 1,
                     alignItems: 'center',
@@ -93,7 +180,7 @@ export default function AddTarefa() {
                         width: 64,
                         height: 64,
                         borderRadius: 32,
-                        backgroundColor: gravando
+                        backgroundColor: estadoGravador.isRecording
                             ? '#dc2626'
                             : pressed
                                 ? '#000f6177'
@@ -102,13 +189,13 @@ export default function AddTarefa() {
                         justifyContent: 'center',
                     })}
                 >
-                    <MaterialIcons name={gravando ? 'stop' : 'mic'}
+                    <MaterialIcons name={estadoGravador.isRecording ? 'stop' : 'mic'}
                         size={28}
                         color="#ffffff"
                     />
                 </Pressable>
 
-                {gravando ? (
+                {estadoGravador.isRecording ? (
                     <Text
                         style={{
                             position: 'absolute',
@@ -117,8 +204,62 @@ export default function AddTarefa() {
                             color: '#dc2626',
                         }}
                     >
-                        Gravando
+                        Gravando... {Math.round(estadoGravador.durationMillis / 1000)}s
                     </Text>
+                ) : null}
+
+                {uriGravacao ? (
+                    <View
+                        style={{
+                            marginTop: 16,
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            gap: 8,
+                        }}
+                    >
+                        <Pressable
+                            onPress={handleReproduzirGravacao}
+                            style={({ pressed }) => ({
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                gap: 8,
+                                paddingVertical: 8,
+                                paddingHorizontal: 14,
+                                borderRadius: 20,
+                                backgroundColor: pressed ? '#dbeafe' : '#eff6ff',
+                            })}
+                        >
+                            <MaterialIcons
+                                name={estadoPlayer.playing ? 'pause' : 'play-arrow'}
+                                size={24}
+                                color="#0347cf"
+                            />
+                            <Text
+                                style={{
+                                    fontFamily: 'GoogleSans_400Regular',
+                                    textAlign: "center",
+                                    color: '#0347cf',
+                                }}
+                            >
+                                {estadoPlayer.playing ? 'Pausar áudio' : 'Ouvir áudio'}
+                            </Text>
+                        </Pressable>
+
+                        <Pressable
+                            onPress={handleLimparGravacao}
+                            accessibilityLabel="Limpar áudio gravado"
+                            style={({ pressed }) => ({
+                                width: 40,
+                                height: 40,
+                                borderRadius: 20,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                backgroundColor: pressed ? '#fee2e2' : '#fef2f2',
+                            })}
+                        >
+                            <MaterialIcons name="delete" size={22} color="#dc2626" />
+                        </Pressable>
+                    </View>
                 ) : null}
 
 
@@ -148,14 +289,187 @@ export default function AddTarefa() {
                     <Text>{tarefaExibida}</Text>
                 ) : null}
 
+            </View> */}
+
+            <View
+                style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'flex-start',
+                    paddingTop: 12,
+
+                }}
+            >
+
+                <View
+                    style=
+                    {{
+                        gap: 4,
+                        borderWidth: 1,
+                        borderRadius: 8,
+                        padding: 12,
+                        paddingBottom: 24,
+                        backgroundColor: "#a9b9be6c",
+                        width: 330,
+
+                    }}
+                >
+                    <Text
+                        style={{
+                            fontFamily: "GoogleSans_400Regular",
+                        }}
+                    >NÍVEL DE PRIORIDADE:</Text>
+
+
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            gap: 12,
+                            justifyContent: "center",
+                            marginBottom: 12,
+                            borderWidth: 0,
+                            //borderRadius: 8,
+                            //padding: 10
+
+                        }}
+                    >
+                        {opcoesPrioridade.map((opcao) => {
+                            const selecionado = prioridade === opcao;
+                            const corPrioridade =
+                                opcao === "Alto"
+                                    ? "#dc2626" // vermelho
+                                    : opcao === "Médio"
+                                        ? "#facc15" // amarelo
+                                        : "#93c5fd"; // azul fraco
+
+                            return (
+                                <Pressable
+                                    key={opcao}
+                                    onPress={() => setPrioridade(opcao)}
+                                    style={{
+                                        paddingVertical: 10,
+                                        paddingHorizontal: 24,
+                                        borderRadius: 8,
+                                        borderWidth: 1,
+                                        //borderColor: selecionado ? corPrioridade : "#ccc",
+                                        borderColor: "black",
+                                        backgroundColor: selecionado ? corPrioridade : "#fff",
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            color: selecionado ? "#fff" : "#333",
+                                            fontWeight: selecionado ? "700" : "400",
+                                        }}
+                                    >
+                                        {opcao}
+                                    </Text>
+                                </Pressable>
+                            );
+                        })}
+                    </View>
+                </View>
+
+                <View
+                    style={{
+                        borderWidth: 1,
+                        marginTop: 30,
+                        backgroundColor: "#a9b9be6c",
+                        borderRadius: 8,
+                        paddingHorizontal: 12,
+                        paddingBottom: 24,
+                        width: 330,
+                    }}
+                >
+                    <Text
+                        style={{
+                            fontFamily: "GoogleSans_400Regular",
+                        }}
+                    >
+                        DESCREVA A TAREFA
+                    </Text>
+                    <TextInput
+                        value={textoTarefa}
+                        onChangeText={SetTextoTarefa}
+                        placeholder="Digite aqui"
+                        multiline={true}
+                        style={{
+                            textAlignVertical: 'top',
+                            height: 80,
+                            width: "100%",
+                            borderWidth: 1,
+                            borderRadius: 8,
+                            fontSize: 14,
+                            padding: 10,
+                            fontFamily: "GoogleSans_400Regular"
+                        }}
+                    />
+
+                    {tarefaExibida ? (
+                        <Text>{tarefaExibida}</Text>
+                    ) : null}
+                </View>
+
+                <View
+                    style={{
+                        borderWidth: 1,
+                        marginTop: 30,
+                        backgroundColor: "#a9b9be6c",
+                        borderRadius: 8,
+                        paddingHorizontal: 12,
+                        paddingVertical: 12,
+                        width: 330,
+                        height: 120,
+                    }}
+                >
+
+                    <Text
+                        style={{
+                            fontFamily: "GoogleSans_400Regular",
+                            textAlign: "center"
+
+                        }}
+                    >
+                        AGENDE O PERIODO DA NOTIFICAÇÃO
+                    </Text>
+
+                    <View style={{
+                        flexDirection: "row",
+                        gap: 24,
+                        
+                        justifyContent: "center",
+                    }}>
+                        {opcoesPeriodo.map((periodo) => {
+                            return (
+                                <Pressable
+                                    key={periodo}
+                                    onPress={() => setPrioridade(periodo)}
+                                    style={{
+                                        paddingVertical: 8,
+                                        paddingHorizontal: 8,
+                                        borderRadius: 8,
+                                        borderWidth: 1,
+                                        borderColor: "#9c3131",
+                                        backgroundColor: "#ffffff",
+                                    }}
+                                >
+                                    <Text>{periodo}</Text>
+                                </Pressable>
+                            );
+
+                        })}
+                    </View>
+                </View>
             </View>
+
+
 
             <Pressable
                 onPress={handleSalvarTarefa}
                 style={({ pressed }) => ({
                     position: 'absolute',
-                    left: 48,
-                    right: 48,
+                    left: 16,
+                    right: 16,
                     bottom: 60,
                     paddingVertical: 14,
                     paddingHorizontal: 22,
