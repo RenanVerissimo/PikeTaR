@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Alert, Pressable, Text, View } from 'react-native';
+import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import SnackbarMessage from '../utils/snackbarMessage';
@@ -37,6 +37,9 @@ export default function AddTarefa() {
     const opcoesPrioridade = ["Alto", "Médio", "Baixo"];
     const opcoesPeriodo = ["15min", "30min", "1hora", "Outro"]
     const [periodo, setPeriodo] = useState("");
+    const [dataNotificacao, setDataNotificacao] = useState("");
+    const [horaNotificacao, setHoraNotificacao] = useState("");
+    const [minutoNotificacao, setMinutoNotificacao] = useState("");
 
     function handleSalvarTarefa() {
         console.log('Tarefa salva com sucesso!');
@@ -291,14 +294,13 @@ export default function AddTarefa() {
 
             </View> */}
 
-            <View
-                style={{
-                    flex: 1,
+            <ScrollView
+                contentContainerStyle={{
                     alignItems: 'center',
-                    justifyContent: 'flex-start',
                     paddingTop: 12,
-
+                    paddingBottom: 150,
                 }}
+                keyboardShouldPersistTaps="handled"
             >
 
                 <View
@@ -419,7 +421,7 @@ export default function AddTarefa() {
                         paddingHorizontal: 12,
                         paddingVertical: 12,
                         width: 330,
-                        height: 120,
+                        minHeight: 120,
                     }}
                 >
 
@@ -430,37 +432,157 @@ export default function AddTarefa() {
 
                         }}
                     >
-                        AGENDE O PERIODO DA NOTIFICAÇÃO
+                        AGENDE O PERÍODO DA NOTIFICAÇÃO
                     </Text>
 
                     <View style={{
                         flexDirection: "row",
                         gap: 24,
-                        
+                        marginTop: 8,
+
                         justifyContent: "center",
                     }}>
-                        {opcoesPeriodo.map((periodo) => {
+                        {opcoesPeriodo.map((opcaoPeriodo) => {
+                            const selecionado = periodo === opcaoPeriodo;
                             return (
                                 <Pressable
-                                    key={periodo}
-                                    onPress={() => setPrioridade(periodo)}
+                                    key={opcaoPeriodo}
+                                    onPress={() => {
+                                        setPeriodo(opcaoPeriodo);
+
+                                        if (opcaoPeriodo !== "Outro") {
+                                            setDataNotificacao("");
+                                            setHoraNotificacao("");
+                                            setMinutoNotificacao("");
+                                        }
+                                    }}
                                     style={{
                                         paddingVertical: 8,
                                         paddingHorizontal: 8,
                                         borderRadius: 8,
                                         borderWidth: 1,
-                                        borderColor: "#9c3131",
-                                        backgroundColor: "#ffffff",
+                                        borderColor: "#000000",
+                                        backgroundColor: selecionado ? "#444644" : "#ffffff",
                                     }}
                                 >
-                                    <Text>{periodo}</Text>
+                                    <Text
+                                        style={{
+                                            color: selecionado ? "#ffffff" : "#333333",
+                                            fontWeight: selecionado ? "700" : "400",
+                                        }}
+                                    >
+                                        {opcaoPeriodo}
+                                    </Text>
+
                                 </Pressable>
                             );
 
                         })}
                     </View>
+
+                    {periodo === "Outro" ? (
+                        <View
+                            style={{
+                                marginTop: 10,
+                                gap: 8,
+                            }}
+                        >
+                            <View
+                                style={{
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    borderWidth: 1,
+                                    borderColor: "#000000",
+                                    borderRadius: 8,
+                                    backgroundColor: "#ffffff",
+                                    paddingHorizontal: 10,
+                                }}
+                            >
+                                <MaterialIcons name="calendar-today" size={18} color="#333333" />
+                                <TextInput
+                                    value={dataNotificacao}
+                                    onChangeText={setDataNotificacao}
+                                    placeholder="Dia: DD/MM/AAAA"
+                                    keyboardType="numeric"
+                                    maxLength={10}
+                                    style={{
+                                        flex: 1,
+                                        paddingVertical: 8,
+                                        paddingHorizontal: 8,
+                                        fontSize: 14,
+                                        fontFamily: "GoogleSans_400Regular",
+                                    }}
+                                />
+                            </View>
+
+                            <View
+                                style={{
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    gap: 8,
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        borderWidth: 1,
+                                        borderColor: "#000000",
+                                        borderRadius: 8,
+                                        backgroundColor: "#ffffff",
+                                        paddingHorizontal: 10,
+                                    }}
+                                >
+                                    <MaterialIcons name="schedule" size={18} color="#333333" />
+                                    <TextInput
+                                        value={horaNotificacao}
+                                        onChangeText={setHoraNotificacao}
+                                        placeholder="Hora"
+                                        keyboardType="numeric"
+                                        maxLength={2}
+                                        style={{
+                                            flex: 1,
+                                            paddingVertical: 8,
+                                            paddingHorizontal: 8,
+                                            fontSize: 14,
+                                            fontFamily: "GoogleSans_400Regular",
+                                        }}
+                                    />
+                                </View>
+
+                                <Text
+                                    style={{
+                                        fontSize: 18,
+                                        fontWeight: "700",
+                                    }}
+                                >
+                                    :
+                                </Text>
+
+                                <TextInput
+                                    value={minutoNotificacao}
+                                    onChangeText={setMinutoNotificacao}
+                                    placeholder="Min"
+                                    keyboardType="numeric"
+                                    maxLength={2}
+                                    style={{
+                                        flex: 1,
+                                        //borderWidth: 1,
+                                        borderColor: "#000000",
+                                        borderRadius: 8,
+                                        backgroundColor: "#ffffff",
+                                        paddingVertical: 8,
+                                        paddingHorizontal: 10,
+                                        fontSize: 14,
+                                        fontFamily: "GoogleSans_400Regular",
+                                    }}
+                                />
+                            </View>
+                        </View>
+                    ) : null}
                 </View>
-            </View>
+            </ScrollView>
 
 
 
