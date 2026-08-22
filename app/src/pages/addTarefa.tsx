@@ -42,6 +42,8 @@ export default function AddTarefa() {
     const [minutoNotificacao, setMinutoNotificacao] = useState("");
     const [mostrarCalendario, setMostrarCalendario] = useState(false);
     const [dataSelecionada, setDataSelecionada] = useState(new Date());
+    const [mostrarHoras, setMostrarHoras] = useState(false);
+    const [horaSelecionada, setHorasSelecionadas] = useState(new Date());
 
     function handleSalvarTarefa() {
         console.log('Tarefa salva com sucesso!');
@@ -170,131 +172,6 @@ export default function AddTarefa() {
                     />
                 </Pressable>
             </View>
-
-            {/*             <View
-                style={{
-                    flex: 1,
-                    alignItems: 'center',
-                    justifyContent: 'flex-start',
-                    paddingTop: 140,
-                }}
-            >
-                <Pressable
-                    onPress={handleGravacao}
-                    style={({ pressed }) => ({
-                        width: 64,
-                        height: 64,
-                        borderRadius: 32,
-                        backgroundColor: estadoGravador.isRecording
-                            ? '#dc2626'
-                            : pressed
-                                ? '#000f6177'
-                                : '#0347cf',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    })}
-                >
-                    <MaterialIcons name={estadoGravador.isRecording ? 'stop' : 'mic'}
-                        size={28}
-                        color="#ffffff"
-                    />
-                </Pressable>
-
-                {estadoGravador.isRecording ? (
-                    <Text
-                        style={{
-                            position: 'absolute',
-                            top: 210,
-                            fontFamily: "GoogleSans_400Regular",
-                            color: '#dc2626',
-                        }}
-                    >
-                        Gravando... {Math.round(estadoGravador.durationMillis / 1000)}s
-                    </Text>
-                ) : null}
-
-                {uriGravacao ? (
-                    <View
-                        style={{
-                            marginTop: 16,
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            gap: 8,
-                        }}
-                    >
-                        <Pressable
-                            onPress={handleReproduzirGravacao}
-                            style={({ pressed }) => ({
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                gap: 8,
-                                paddingVertical: 8,
-                                paddingHorizontal: 14,
-                                borderRadius: 20,
-                                backgroundColor: pressed ? '#dbeafe' : '#eff6ff',
-                            })}
-                        >
-                            <MaterialIcons
-                                name={estadoPlayer.playing ? 'pause' : 'play-arrow'}
-                                size={24}
-                                color="#0347cf"
-                            />
-                            <Text
-                                style={{
-                                    fontFamily: 'GoogleSans_400Regular',
-                                    textAlign: "center",
-                                    color: '#0347cf',
-                                }}
-                            >
-                                {estadoPlayer.playing ? 'Pausar áudio' : 'Ouvir áudio'}
-                            </Text>
-                        </Pressable>
-
-                        <Pressable
-                            onPress={handleLimparGravacao}
-                            accessibilityLabel="Limpar áudio gravado"
-                            style={({ pressed }) => ({
-                                width: 40,
-                                height: 40,
-                                borderRadius: 20,
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                backgroundColor: pressed ? '#fee2e2' : '#fef2f2',
-                            })}
-                        >
-                            <MaterialIcons name="delete" size={22} color="#dc2626" />
-                        </Pressable>
-                    </View>
-                ) : null}
-
-
-                <TextInput
-                    value={textoTarefa}
-                    onChangeText={SetTextoTarefa}
-                    placeholder="Digite aqui"
-                    multiline={true}
-                    style={{
-                        textAlignVertical: 'top',
-                        marginTop: 48,
-                        borderColor: "black",
-                        height: 80,
-                        width: 240,
-                        //borderBlockColor: "black",
-                        color: '#000',
-                        borderWidth: 2,
-                        borderRadius: 8,
-                        fontSize: 16,
-                        padding: 12,
-                        fontFamily: "GoogleSans_400Regular"
-                    }}
-                >
-                </TextInput>
-
-                {tarefaExibida ? (
-                    <Text>{tarefaExibida}</Text>
-                ) : null}
-
-            </View> */}
 
             <ScrollView
                 contentContainerStyle={{
@@ -486,7 +363,7 @@ export default function AddTarefa() {
                         <View
                             style={{
                                 marginTop: 10,
-                                gap: 8,
+                                gap: 8
                             }}
                         >
                             <View
@@ -500,7 +377,7 @@ export default function AddTarefa() {
                                     paddingHorizontal: 10,
                                 }}
                             >
-                                <MaterialIcons name="calendar-today" size={18} color="#333333" />
+                                <MaterialIcons name="calendar-today" size={28} color="#333333" />
                                 <Pressable
                                     onPress={() => setMostrarCalendario(true)}
                                     style={{
@@ -511,12 +388,13 @@ export default function AddTarefa() {
                                 >
                                     <Text
                                         style={{
+                                            
                                             fontSize: 14,
                                             fontFamily: "GoogleSans_400Regular",
                                             color: dataNotificacao ? "#000000" : "#777777",
                                         }}
                                     >
-                                        {dataNotificacao || "Selecionar dia"}
+                                        {dataNotificacao || "Selecionar Dia"}
                                     </Text>
                                 </Pressable>
                             </View>
@@ -537,76 +415,71 @@ export default function AddTarefa() {
                                 />
                             ) : null}
 
+                            {/* Campo de escolha de horas e minutos */}
+
                             <View
                                 style={{
+                                    marginTop: 12,
+                                    borderWidth: 1,
+                                    borderRadius: 8,
+                                    height: 45,
+                                    backgroundColor: "#ffffff",
                                     flexDirection: "row",
                                     alignItems: "center",
-                                    gap: 8,
+                                    paddingHorizontal: 10,
+
                                 }}
                             >
-                                <View
+                                <MaterialIcons name="access-time" size={28} color="#333333" />
+                                <Pressable
+                                    onPress={() => setMostrarHoras(true)}
                                     style={{
                                         flex: 1,
-                                        flexDirection: "row",
-                                        alignItems: "center",
-                                        borderWidth: 1,
-                                        borderColor: "#000000",
-                                        borderRadius: 8,
-                                        backgroundColor: "#ffffff",
-                                        paddingHorizontal: 10,
-                                    }}
-                                >
-                                    <MaterialIcons name="schedule" size={18} color="#333333" />
-                                    <TextInput
-                                        value={horaNotificacao}
-                                        onChangeText={setHoraNotificacao}
-                                        placeholder="Hora"
-                                        keyboardType="numeric"
-                                        maxLength={2}
+                                        paddingVertical: 8,
+                                        paddingHorizontal: 8
+                                    }}>
+                                    <Text
                                         style={{
-                                            flex: 1,
-                                            paddingVertical: 8,
-                                            paddingHorizontal: 8,
                                             fontSize: 14,
                                             fontFamily: "GoogleSans_400Regular",
+                                            color: horaNotificacao ? "#000000" : "#777777",
                                         }}
-                                    />
-                                </View>
+                                    >
+                                        {horaNotificacao && minutoNotificacao
+                                            ? `${horaNotificacao}:${minutoNotificacao}`
+                                            : "Selecionar Horário"}
+                                    </Text>
 
-                                <Text
-                                    style={{
-                                        fontSize: 18,
-                                        fontWeight: "700",
-                                    }}
-                                >
-                                    :
-                                </Text>
 
-                                <TextInput
-                                    value={minutoNotificacao}
-                                    onChangeText={setMinutoNotificacao}
-                                    placeholder="Min"
-                                    keyboardType="numeric"
-                                    maxLength={2}
-                                    style={{
-                                        flex: 1,
-                                        //borderWidth: 1,
-                                        borderColor: "#000000",
-                                        borderRadius: 8,
-                                        backgroundColor: "#ffffff",
-                                        paddingVertical: 8,
-                                        paddingHorizontal: 10,
-                                        fontSize: 14,
-                                        fontFamily: "GoogleSans_400Regular",
+                                </Pressable>
+                            </View>
+
+                            {mostrarHoras ? (
+                                <DateTimePicker
+                                    value={horaSelecionada}
+                                    mode="time"
+                                    display="spinner"
+                                    onChange={(event, selectedTime) => {
+                                        setMostrarHoras(false);
+                                        if (event.type === "dismissed") {
+                                            return;
+                                        }
+                                        if (selectedTime) {
+                                            setHorasSelecionadas(selectedTime);
+
+                                            const hora = selectedTime.getHours().toString().padStart(2, "0");
+                                            const minuto = selectedTime.getMinutes().toString().padStart(2, "0");
+
+                                            setHoraNotificacao(hora);
+                                            setMinutoNotificacao(minuto);
+                                        }
                                     }}
                                 />
-                            </View>
+                            ) : null}
                         </View>
                     ) : null}
                 </View>
-            </ScrollView>
-
-
+            </ScrollView >
 
             <Pressable
                 onPress={handleSalvarTarefa}
