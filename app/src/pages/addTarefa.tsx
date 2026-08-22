@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
+import { Alert, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import SnackbarMessage from '../utils/snackbarMessage';
-import { TextInput } from 'react-native-gesture-handler';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 import {
     GoogleSans_400Regular,
@@ -40,6 +40,8 @@ export default function AddTarefa() {
     const [dataNotificacao, setDataNotificacao] = useState("");
     const [horaNotificacao, setHoraNotificacao] = useState("");
     const [minutoNotificacao, setMinutoNotificacao] = useState("");
+    const [mostrarCalendario, setMostrarCalendario] = useState(false);
+    const [dataSelecionada, setDataSelecionada] = useState(new Date());
 
     function handleSalvarTarefa() {
         console.log('Tarefa salva com sucesso!');
@@ -499,21 +501,41 @@ export default function AddTarefa() {
                                 }}
                             >
                                 <MaterialIcons name="calendar-today" size={18} color="#333333" />
-                                <TextInput
-                                    value={dataNotificacao}
-                                    onChangeText={setDataNotificacao}
-                                    placeholder="Dia: DD/MM/AAAA"
-                                    keyboardType="numeric"
-                                    maxLength={10}
+                                <Pressable
+                                    onPress={() => setMostrarCalendario(true)}
                                     style={{
                                         flex: 1,
                                         paddingVertical: 8,
                                         paddingHorizontal: 8,
-                                        fontSize: 14,
-                                        fontFamily: "GoogleSans_400Regular",
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontSize: 14,
+                                            fontFamily: "GoogleSans_400Regular",
+                                            color: dataNotificacao ? "#000000" : "#777777",
+                                        }}
+                                    >
+                                        {dataNotificacao || "Selecionar dia"}
+                                    </Text>
+                                </Pressable>
+                            </View>
+
+                            {mostrarCalendario ? (
+                                <DateTimePicker
+                                    value={dataSelecionada}
+                                    mode="date"
+                                    display="calendar"
+                                    onChange={(_event, selectedDate) => {
+                                        setMostrarCalendario(false);
+
+                                        if (selectedDate) {
+                                            setDataSelecionada(selectedDate);
+                                            setDataNotificacao(selectedDate.toLocaleDateString("pt-BR"));
+                                        }
                                     }}
                                 />
-                            </View>
+                            ) : null}
 
                             <View
                                 style={{
