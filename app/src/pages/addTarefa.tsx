@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { Alert, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import SnackbarMessage from '../utils/snackbarMessage';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { exibirToastSucesso } from '../utils/toastMessage';
 
 import {
     GoogleSans_400Regular,
@@ -22,7 +22,6 @@ import {
 import React from 'react';
 
 export default function AddTarefa() {
-    const [snackbarVisivel, setSnackbarVisivel] = useState(false);
     const [textoTarefa, SetTextoTarefa] = useState("");
     const [tarefaExibida, setTarefaExibida] = useState("");
     const [uriGravacao, setUriGravacao] = useState<string | null>(null);
@@ -48,11 +47,7 @@ export default function AddTarefa() {
     function handleSalvarTarefa() {
         console.log('Tarefa salva com sucesso!');
         setTarefaExibida(textoTarefa);
-        setSnackbarVisivel(true);
-
-        setTimeout(() => {
-            setSnackbarVisivel(false);
-        }, 3000);
+        exibirToastSucesso("Tarefa adicionada!", "A tarefa foi salva com sucesso.");
     }
 
     function voltar() {
@@ -510,11 +505,6 @@ export default function AddTarefa() {
                     Salvar
                 </Text>
             </Pressable>
-
-            <SnackbarMessage
-                visible={snackbarVisivel}
-                message="Tarefa adicionada com sucesso!"
-            />
         </>
     );
 }
