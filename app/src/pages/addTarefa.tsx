@@ -363,6 +363,7 @@ export default function AddTarefa() {
                         >
                             <View
                                 style={{
+                                    height: 45,
                                     flexDirection: "row",
                                     alignItems: "center",
                                     borderWidth: 1,
@@ -374,7 +375,7 @@ export default function AddTarefa() {
                             >
                                 <MaterialIcons name="calendar-today" size={28} color="#333333" />
                                 <Pressable
-                                    onPress={() => setMostrarCalendario(true)}
+                                    onPress={() => setMostrarCalendario((valorAtual) => !valorAtual)}
                                     style={{
                                         flex: 1,
                                         paddingVertical: 8,
@@ -414,7 +415,6 @@ export default function AddTarefa() {
 
                             <View
                                 style={{
-                                    marginTop: 12,
                                     borderWidth: 1,
                                     borderRadius: 8,
                                     height: 45,
