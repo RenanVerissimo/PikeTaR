@@ -10,25 +10,12 @@ import {
     useFonts,
 } from '@expo-google-fonts/google-sans';
 
-import {
-    AudioModule,
-    RecordingPresets,
-    setAudioModeAsync,
-    useAudioPlayer,
-    useAudioPlayerStatus,
-    useAudioRecorder,
-    useAudioRecorderState,
-} from 'expo-audio';
 import React from 'react';
 
 export default function AddTarefa() {
     const [textoTarefa, SetTextoTarefa] = useState("");
     const [tarefaExibida, setTarefaExibida] = useState("");
-    const [uriGravacao, setUriGravacao] = useState<string | null>(null);
-    const gravador = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
-    const estadoGravador = useAudioRecorderState(gravador);
-    const player = useAudioPlayer(null);
-    const estadoPlayer = useAudioPlayerStatus(player);
+
     const [fontesCarregadas, erroFonte] = useFonts({
         GoogleSans_400Regular
     });
@@ -53,84 +40,6 @@ export default function AddTarefa() {
     function voltar() {
         console.log('Voltar para a tela inicial');
         router.push('/')
-    }
-
-    async function handleGravacao() {
-        try {
-            if (estadoGravador.isRecording) {
-                await gravador.stop();
-
-                if (gravador.uri) {
-                    setUriGravacao(gravador.uri);
-                    player.replace(gravador.uri);
-                    console.log('Gravação salva:', gravador.uri);
-                }
-
-                return;
-            }
-
-            if (estadoPlayer.playing) {
-                player.pause();
-            }
-
-            await gravador.prepareToRecordAsync();
-            gravador.record();
-        } catch (erro) {
-            console.error('Erro ao gravar:', erro);
-            Alert.alert('Erro', 'Não foi possível realizar a gravação.');
-        }
-    }
-
-    async function handleReproduzirGravacao() {
-        if (!uriGravacao) {
-            return;
-        }
-
-        if (estadoPlayer.playing) {
-            player.pause();
-            return;
-        }
-
-        if (estadoPlayer.didJustFinish ||
-            (estadoPlayer.duration > 0 && estadoPlayer.currentTime >= estadoPlayer.duration)) {
-            await player.seekTo(0);
-        }
-
-        player.play();
-    }
-
-    async function handleLimparGravacao() {
-        if (estadoPlayer.playing) {
-            player.pause();
-        }
-
-        await player.seekTo(0);
-        setUriGravacao(null);
-    }
-
-    useEffect(() => {
-        async function configurarAudio() {
-            const permissao = await AudioModule.requestRecordingPermissionsAsync();
-
-            if (!permissao.granted) {
-                Alert.alert(
-                    'Permissão necessária',
-                    'Permita o acesso ao microfone para gravar uma tarefa.'
-                );
-                return;
-            }
-
-            await setAudioModeAsync({
-                allowsRecording: true,
-                playsInSilentMode: true,
-            });
-        }
-
-        configurarAudio();
-    }, []);
-
-    if (!fontesCarregadas && !erroFonte) {
-        return null;
     }
 
     return (
