@@ -1,0 +1,9 @@
+{
+  "name": "piketar-backend",
+  "version": "1.0.0",
+  "private": true,
+  "main": "connection.js",
+  "scripts": {
+    "start": "node connection.js"
+  }
+}

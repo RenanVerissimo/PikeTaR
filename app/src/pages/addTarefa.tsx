@@ -34,16 +34,7 @@ export default function AddTarefa() {
 
 
     function handleSalvarTarefa() {
-        console.log("Prioridade Escolhida:", prioridade);
-        console.log("Tarefa:", textoTarefa);
-        console.log("Periodo da notificacao:", dataSelecionada);
-        console.log("Periodo da notificacao:", periodo);
-        console.log("----------------");
-        console.log("dataNotificacao:", dataNotificacao);
-        console.log("formatDataHora:", formatDataHora());
-        console.log("data atual:", periodosCalculados());
-        console.log("horaNotificacao:", horaNotificacao);
-        console.log("minutoNotificacao:", minutoNotificacao);
+        
 
         exibirToastSucesso("Tarefa adicionada!", "A tarefa foi salva com sucesso.");
     }
@@ -474,8 +465,7 @@ export default function AddTarefa() {
             <View
                 style={{
                     alignItems: "center",
-                    justifyContent: "center",
-                    //margin: 40  
+                    justifyContent: "center", 
                     padding: 10
                 }}>
                 <Pressable
