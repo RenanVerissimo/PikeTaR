@@ -1,6 +1,8 @@
 import { Tarefa } from "../types/tipagem";
+require("dotenv").config();
 
-const API_URL = "http://192.168.32.108:3000";
+const API_URL = process.env.EXPO_PUBLIC_API_URL;
+
 
 export async function buscarTarefas(): Promise<Tarefa[]> {
     const response = await fetch(`${API_URL}/tarefas`);
