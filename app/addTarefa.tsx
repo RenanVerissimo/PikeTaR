@@ -1,22 +1,19 @@
-import { useState, useEffect } from 'react';
-import { Alert, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { useState } from 'react';
+import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { exibirToastSucesso } from '../utils/toastMessage';
+import { exibirToastSucesso } from '../src/utils/toastMessage';
 
 import {
     GoogleSans_400Regular,
     useFonts,
 } from '@expo-google-fonts/google-sans';
 
-import React from 'react';
-import { adicionarTarefa } from '../services/api';
+import { adicionarTarefa } from '../src/services/api';
 
 export default function AddTarefa() {
     const [textoTarefa, SetTextoTarefa] = useState("");
-    const [tarefaExibida, setTarefaExibida] = useState("");
-
     const [fontesCarregadas, erroFonte] = useFonts({
         GoogleSans_400Regular
     });
@@ -48,13 +45,6 @@ export default function AddTarefa() {
 
         exibirToastSucesso("Tarefa adicionada!", "A tarefa foi salva com sucesso.");
     }
-
-    const dataAgendamentoCalculada = new Date();
-    dataAgendamentoCalculada.setMinutes(
-        dataAgendamentoCalculada.getMinutes() + Number(periodo)
-    );
-
-    const dataAgendamento = formatarDataMysql(dataAgendamentoCalculada);
 
     function formatarDataMysql(data: Date) {
         const ano = data.getFullYear();
@@ -88,6 +78,10 @@ export default function AddTarefa() {
         data.setSeconds(0);
 
         return formatarDataMysql(data);
+    }
+
+    if (!fontesCarregadas && !erroFonte) {
+        return null;
     }
 
     return (

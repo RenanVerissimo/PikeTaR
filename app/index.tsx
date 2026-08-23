@@ -2,9 +2,8 @@ import { useRouter } from 'expo-router';
 import { Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { useState, useCallback } from 'react';
-import React from 'react';
-import { buscarTarefas, deleteTarefa } from './src/services/api';
-import { Tarefa } from './src/types/tipagem';
+import { buscarTarefas, deleteTarefa } from '../src/services/api';
+import { Tarefa } from '../src/types/tipagem';
 import { useFocusEffect } from '@react-navigation/native';
 
 export default function Home() {
@@ -146,13 +145,10 @@ export default function Home() {
             justifyContent: 'center',
             paddingHorizontal: 18,
             paddingVertical: 14,
-            shadowColor: '#1d4ed8',
-            shadowOffset: { width: 0, height: 8 },
-            shadowOpacity: 0.18,
-            shadowRadius: 16,
+            boxShadow: '0 8px 16px rgba(29, 78, 216, 0.18)',
             elevation: 3,
           }}
-          onPress={() => router.push('/src/pages/addTarefa')}
+          onPress={() => router.push('/addTarefa')}
         >
           <Text
             style={{
@@ -256,10 +252,7 @@ export default function Home() {
                 minHeight: 65,
                 overflow: 'hidden',
                 paddingRight: 14,
-                shadowColor: '#0f172a',
-                shadowOffset: { width: 0, height: 6 },
-                shadowOpacity: 0.06,
-                shadowRadius: 12,
+                boxShadow: '0 6px 12px rgba(15, 23, 42, 0.06)',
                 elevation: 2,
               }}
             >
