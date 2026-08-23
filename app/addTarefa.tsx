@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { exibirToastSucesso } from '../src/utils/toastMessage';
+import { exibirToastErro, exibirToastSucesso } from '../src/utils/toastMessage';
 
 import {
     GoogleSans_400Regular,
@@ -24,26 +24,47 @@ export default function AddTarefa() {
     const [horaNotificacao, setHoraNotificacao] = useState("");
     const [minutoNotificacao, setMinutoNotificacao] = useState("");
     const [mostrarCalendario, setMostrarCalendario] = useState(false);
-    const [dataSelecionada, setDataSelecionada] = useState(new Date());
+    const [dataSelecionada, setDataSelecionada] = useState<Date | null>(null);
     const [mostrarHoras, setMostrarHoras] = useState(false);
-    const [horaSelecionada, setHorasSelecionadas] = useState(new Date());
-
-
-
+    const [horaSelecionada, setHorasSelecionadas] = useState<Date | null>(null);
+    const dataAgendamento =
+        periodo === "Outro"
+            ? formatDataHora()
+            : periodosCalculados();
     async function handleSalvarTarefa() {
+
+        if (!prioridade) {
+            exibirToastErro("Erro!", "Prioridade da tarefa não inserida");
+            return;
+        }
+
+        if (!textoTarefa) {
+            exibirToastErro("Erro!", "Descricao de tarefa não inserido");
+            return;
+        }
+
+
+
+        if (!dataAgendamento) {
+            exibirToastErro("Erro!", "Periodo de tempo nao selecionado");
+            return;
+        }
+
+
+
+
+
         const novaTarefa = {
             prioridade,
             descricaoTarefa: textoTarefa,
             dataCriacao: formatarDataMysql(new Date()),
-            dataAgendamento:
-                periodo === "Outro"
-                    ? formatDataHora()
-                    : periodosCalculados()
+            dataAgendamento
         };
 
         await adicionarTarefa(novaTarefa);
 
         exibirToastSucesso("Tarefa adicionada!", "A tarefa foi salva com sucesso.");
+        clear();
     }
 
     function formatarDataMysql(data: Date) {
@@ -54,14 +75,33 @@ export default function AddTarefa() {
         const minuto = String(data.getMinutes()).padStart(2, "0");
         const segundo = String(data.getSeconds()).padStart(2, "0");
 
-        return `${ano}-${mes}-${dia} ${hora}:${minuto}:${segundo}`;
+        const novaDataFormatada = `${ano}-${mes}-${dia} ${hora}:${minuto}:${segundo}`
+        return novaDataFormatada;
     }
+
+
+    function clear() {
+        setPrioridade("");
+        setPeriodo("");
+        setDataNotificacao("");
+        setHoraNotificacao("");
+        setMinutoNotificacao("");
+        setDataSelecionada(null);
+        setHorasSelecionadas(null);
+        SetTextoTarefa("");
+    }
+
+
     function voltar() {
         console.log('Voltar para a tela inicial');
         router.push('/')
     }
 
     function periodosCalculados() {
+        if (!["15", "30", "60"].includes(periodo)) {
+            return null;
+        }
+
         const dataAtual = new Date();
         const dataMaisPeriodo = new Date(dataAtual);
 
@@ -71,6 +111,11 @@ export default function AddTarefa() {
     }
 
     function formatDataHora() {
+        if (!dataSelecionada || !horaNotificacao || !minutoNotificacao) {
+            exibirToastErro("Selecione data e horario", "Escolha o dia e a hora antes de salvar.");
+            return null;
+        }
+
         const data = new Date(dataSelecionada);
 
         data.setHours(Number(horaNotificacao));
@@ -80,9 +125,9 @@ export default function AddTarefa() {
         return formatarDataMysql(data);
     }
 
-    if (!fontesCarregadas && !erroFonte) {
-        return null;
-    }
+    useEffect(() => {
+        console.log("dataAgendamento", dataAgendamento);
+    }, [dataAgendamento]);
 
     return (
         <ScrollView
@@ -137,8 +182,6 @@ export default function AddTarefa() {
                     paddingBottom: 16,
                     backgroundColor: "#a9b9be6c",
                     width: 330,
-
-
                 }}
             >
                 <Text
@@ -399,7 +442,7 @@ export default function AddTarefa() {
 
                         {mostrarCalendario ? (
                             <DateTimePicker
-                                value={dataSelecionada}
+                                value={dataSelecionada ?? new Date()}
                                 mode="date"
                                 display="calendar"
                                 onChange={(_event, selectedDate) => {
@@ -453,7 +496,7 @@ export default function AddTarefa() {
 
                         {mostrarHoras ? (
                             <DateTimePicker
-                                value={horaSelecionada}
+                                value={horaSelecionada ?? new Date()}
                                 mode="time"
                                 display="spinner"
                                 onChange={(event, selectedTime) => {
