@@ -1,6 +1,6 @@
 import { Tarefa } from "../types/tipagem";
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL;
+const API_URL = (process.env.EXPO_PUBLIC_API_URL || "http://localhost:3000").replace(/\/$/, "");
 
 
 export async function buscarTarefas(): Promise<Tarefa[]> {
