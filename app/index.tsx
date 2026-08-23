@@ -74,18 +74,24 @@ export default function Home() {
     }
 
     return {
-      cor: "#22c55e",
-      fundo: "#dcfce7",
+      cor: "#006eff",
+      fundo: "#c9e1f1",
     };
   }
 
-  function formatarData(data: string) {
+function formatarData(data: string) {
     if (!data) {
-      return "";
+        return "";
     }
 
-    return data.replace("T", " ").slice(0, 16);
-  }
+    return new Date(data).toLocaleString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+    });
+}
 
   return (
     <ScrollView

@@ -125,10 +125,6 @@ export default function AddTarefa() {
         return formatarDataMysql(data);
     }
 
-    useEffect(() => {
-        console.log("dataAgendamento", dataAgendamento);
-    }, [dataAgendamento]);
-
     return (
         <ScrollView
             contentContainerStyle={{
