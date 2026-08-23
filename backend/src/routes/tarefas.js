@@ -8,10 +8,15 @@ router.get("/", async (req, res) => {
     const [tarefas] = await db.query(
       "SELECT id_tarefa AS id, prioridade, descricaoTarefa, dataCriacao, dataAgendamento FROM tarefa"
     );
+
     res.json(tarefas);
+
   } catch (erro) {
     console.error("Erro ao buscar tarefas:", erro);
-    res.status(500).json({ erro: "Erro ao buscar tarefas" });
+
+    res.status(500).json({
+      erro: erro.message
+    });
   }
 });
 
