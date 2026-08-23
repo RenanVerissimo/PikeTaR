@@ -36,6 +36,7 @@ export default function AddTarefa() {
         console.log("Prioridade Escolhida:", prioridade);
         console.log("Tarefa:", textoTarefa);
         console.log("Periodo da notificacao:", dataSelecionada);
+        console.log("Periodo da notificacao:", periodo);
         console.log("----------------");
         console.log("dataNotificacao:", dataNotificacao);
         console.log("formatDataHora:", formatDataHora());
@@ -56,11 +57,19 @@ export default function AddTarefa() {
     }
 
     return (
-        <>
-
+        <ScrollView
+            contentContainerStyle={{
+                alignItems: 'center',
+                paddingTop: 0,
+                paddingBottom: 40,
+                
+            }}
+            keyboardShouldPersistTaps="handled"
+        >
             <View
                 style={{
                     height: 120,
+                    width: "100%",
                     justifyContent: 'flex-end',
                     alignItems: 'flex-start',
                     paddingLeft: 12,
@@ -90,15 +99,6 @@ export default function AddTarefa() {
                 </Pressable>
             </View>
 
-            <ScrollView
-                contentContainerStyle={{
-                    alignItems: 'center',
-                    paddingTop: 12,
-                    paddingBottom: 150,
-                }}
-                keyboardShouldPersistTaps="handled"
-            >
-
                 <View
                     style=
                     {{
@@ -106,7 +106,7 @@ export default function AddTarefa() {
                         borderWidth: 1,
                         borderRadius: 8,
                         padding: 12,
-                        paddingBottom: 24,
+                        paddingBottom: 16,
                         backgroundColor: "#a9b9be6c",
                         width: 330,
 
@@ -239,7 +239,7 @@ export default function AddTarefa() {
                             style={{
                                 borderWidth: 1,
                                 borderRadius: 8,
-                                width: 56,
+                                width: 60,
                                 height: 40,
                                 backgroundColor: periodo === "15" ? "#a9b9be6c" : "#ffffff",
                                 alignItems: "center",
@@ -261,7 +261,7 @@ export default function AddTarefa() {
                             style={{
                                 borderWidth: 1,
                                 borderRadius: 8,
-                                width: 56,
+                                width: 60,
                                 height: 40,
                                 backgroundColor: periodo === "30" ? "#a9b9be6c" : "#ffffff",
                                 alignItems: "center",
@@ -284,7 +284,7 @@ export default function AddTarefa() {
                             style={{
                                 borderWidth: 1,
                                 borderRadius: 8,
-                                width: 56,
+                                width: 60,
                                 height: 40,
                                 backgroundColor: periodo === "60" ? "#a9b9be6c" : "#ffffff",
                                 alignItems: "center",
@@ -306,7 +306,7 @@ export default function AddTarefa() {
                             style={{
                                 borderWidth: 1,
                                 borderRadius: 8,
-                                width: 56,
+                                width: 60,
                                 height: 40,
                                 backgroundColor: periodo === "Outro" ? "#a9b9be6c" : "#ffffff",
                                 alignItems: "center",
@@ -347,7 +347,7 @@ export default function AddTarefa() {
                             >
                                 <MaterialIcons name="calendar-today" size={28} color="#333333" />
                                 <Pressable
-                                    onPress={() => setMostrarCalendario((valorAtual) => !valorAtual)}
+                                    onPress={() => setMostrarCalendario(true)}
                                     style={{
                                         flex: 1,
                                         paddingVertical: 8,
@@ -356,7 +356,6 @@ export default function AddTarefa() {
                                 >
                                     <Text
                                         style={{
-
                                             fontSize: 14,
                                             fontFamily: "GoogleSans_400Regular",
                                             color: dataNotificacao ? "#000000" : "#777777",
@@ -446,18 +445,18 @@ export default function AddTarefa() {
                         </View>
                     ) : null}
                 </View>
-            </ScrollView >
 
             <View
                 style={{
                         alignItems: "center",
                         justifyContent: "center",
-                        marginBottom: 100  
+                        //margin: 40  
+                        padding: 10
                 }}>
                 <Pressable
                     onPress={handleSalvarTarefa}
                     style={({ pressed }) => ({
-                        width: 200,
+                        width: 220,
                         height: 48,
                         borderWidth: 1,
                         borderColor: "#000000",
@@ -480,6 +479,6 @@ export default function AddTarefa() {
                     </Text>
                 </Pressable>
             </View>
-        </>
+        </ScrollView>
     );
 }
