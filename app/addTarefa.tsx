@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
@@ -11,6 +11,7 @@ import {
 } from '@expo-google-fonts/google-sans';
 
 import { adicionarTarefa } from '../src/services/api';
+import { agendarNotificacaoTarefa } from '@/hooks/use-push-notifications';
 
 export default function AddTarefa() {
     const [textoTarefa, SetTextoTarefa] = useState("");
@@ -27,10 +28,6 @@ export default function AddTarefa() {
     const [dataSelecionada, setDataSelecionada] = useState<Date | null>(null);
     const [mostrarHoras, setMostrarHoras] = useState(false);
     const [horaSelecionada, setHorasSelecionadas] = useState<Date | null>(null);
-    const dataAgendamento =
-        periodo === "Outro"
-            ? formatDataHora()
-            : periodosCalculados();
     async function handleSalvarTarefa() {
 
         if (!prioridade) {
@@ -44,6 +41,11 @@ export default function AddTarefa() {
         }
 
 
+
+        const dataAgendamento =
+            periodo === "Outro"
+                ? formatDataHora()
+                : periodosCalculados();
 
         if (!dataAgendamento) {
             exibirToastErro("Erro!", "Periodo de tempo nao selecionado");
@@ -61,10 +63,22 @@ export default function AddTarefa() {
             dataAgendamento
         };
 
-        await adicionarTarefa(novaTarefa);
+        try {
+            await agendarNotificacaoTarefa(textoTarefa, converterDataMysqlParaDate(dataAgendamento));
+        } catch (erro) {
+            console.error("Erro ao agendar notificacao:", erro);
+            exibirToastErro("Erro!", "Nao foi possivel agendar a notificacao.");
+            return;
+        }
 
-        exibirToastSucesso("Tarefa adicionada!", "A tarefa foi salva com sucesso.");
-        clear();
+        try {
+            await adicionarTarefa(novaTarefa);
+            exibirToastSucesso("Tarefa adicionada!", "A tarefa foi salva com sucesso.");
+            clear();
+        } catch (erro) {
+            console.error("Erro ao salvar tarefa:", erro);
+            exibirToastErro("Notificacao agendada", "Nao foi possivel confirmar o salvamento no banco.");
+        }
     }
 
     function formatarDataMysql(data: Date) {
@@ -98,7 +112,7 @@ export default function AddTarefa() {
     }
 
     function periodosCalculados() {
-        if (!["15", "30", "60"].includes(periodo)) {
+        if (!["1", "30", "60"].includes(periodo)) {
             return null;
         }
 
@@ -108,6 +122,14 @@ export default function AddTarefa() {
         dataMaisPeriodo.setMinutes(dataMaisPeriodo.getMinutes() + Number(periodo));
 
         return formatarDataMysql(dataMaisPeriodo);
+    }
+
+    function converterDataMysqlParaDate(data: string) {
+        return new Date(data.replace(" ", "T"));
+    }
+
+    if (!fontesCarregadas && !erroFonte) {
+        return null;
     }
 
     function formatDataHora() {
@@ -305,13 +327,13 @@ export default function AddTarefa() {
                     marginTop: 12
                 }}>
                     <Pressable
-                        onPress={() => { setPeriodo("15") }}
+                        onPress={() => { setPeriodo("1") }}
                         style={{
                             borderWidth: 1,
                             borderRadius: 8,
                             width: 66,
                             height: 40,
-                            backgroundColor: periodo === "15" ? "#a9b9be6c" : "#ffffff",
+                            backgroundColor: periodo === "1" ? "#a9b9be6c" : "#ffffff",
                             alignItems: "center",
                             justifyContent: "center",
                         }}
@@ -323,7 +345,7 @@ export default function AddTarefa() {
                                 includeFontPadding: false,
                             }}
                         >
-                            15Min
+                            1Min
                         </Text>
                     </Pressable>
                     <Pressable

@@ -3,11 +3,11 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Toast from 'react-native-toast-message';
 import { toastConfig } from '../src/utils/toastConfig';
 
-//import { usePushNotifications } from '@/hooks/use-push-notifications';
+import { usePushNotifications } from '@/hooks/use-push-notifications';
 import React from 'react';
 
 export default function RootLayout() {
-  //usePushNotifications();
+  usePushNotifications();
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

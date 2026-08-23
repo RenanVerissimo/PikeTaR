@@ -2,12 +2,14 @@ export async function registerForPushNotificationsAsync() {
   return null;
 }
 
-export async function exibirNotificacao() {
-  if (typeof window !== 'undefined') {
-    window.alert('Teste as notificacoes em um aparelho Android ou iOS.');
-  }
+export async function prepararNotificacoes() {
+  return false;
+}
+
+export async function agendarNotificacaoTarefa() {
+  return;
 }
 
 export function usePushNotifications() {
-  return null;
+  return;
 }
