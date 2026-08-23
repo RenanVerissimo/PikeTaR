@@ -274,7 +274,8 @@ export default function AddTarefa() {
                     flexDirection: "row",
                     alignItems: "center",
                     justifyContent: "center",
-                    gap: 10
+                    gap: 16,
+                    marginTop: 12
                 }}>
                     <Pressable
                         onPress={() => { setPeriodo("15") }}
