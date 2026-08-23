@@ -30,16 +30,29 @@ export default function AddTarefa() {
     const [dataSelecionada, setDataSelecionada] = useState(new Date());
     const [mostrarHoras, setMostrarHoras] = useState(false);
     const [horaSelecionada, setHorasSelecionadas] = useState(new Date());
+    const [Quinze, setQuinze] = useState("");
 
     function handleSalvarTarefa() {
-        console.log('Tarefa salva com sucesso!');
-        setTarefaExibida(textoTarefa);
+        console.log("Prioridade Escolhida:", prioridade);
+        console.log("Tarefa:", textoTarefa);
+        console.log("Periodo da notificacao:", dataSelecionada);
+        console.log("----------------");
+        console.log("dataNotificacao:", dataNotificacao);
+        console.log("formatDataHora:", formatDataHora());
+        console.log("horaNotificacao:", horaNotificacao);
+        console.log("minutoNotificacao:", minutoNotificacao);
+
         exibirToastSucesso("Tarefa adicionada!", "A tarefa foi salva com sucesso.");
     }
 
     function voltar() {
         console.log('Voltar para a tela inicial');
         router.push('/')
+    }
+
+    function formatDataHora() {
+
+        return dataSelecionada;
     }
 
     return (
@@ -143,7 +156,7 @@ export default function AddTarefa() {
                                 >
                                     <Text
                                         style={{
-                                            color: selecionado ? "#fff" : "#333",
+                                            color: selecionado ? "#fff" : "#000000",
                                             fontWeight: selecionado ? "700" : "400",
                                         }}
                                     >
@@ -189,10 +202,6 @@ export default function AddTarefa() {
                             fontFamily: "GoogleSans_400Regular"
                         }}
                     />
-
-                    {tarefaExibida ? (
-                        <Text>{tarefaExibida}</Text>
-                    ) : null}
                 </View>
 
                 <View
@@ -220,47 +229,101 @@ export default function AddTarefa() {
 
                     <View style={{
                         flexDirection: "row",
-                        gap: 24,
-                        marginTop: 8,
-
+                        alignItems: "center",
                         justifyContent: "center",
+                        marginTop: 8,
+                        gap: 20
                     }}>
-                        {opcoesPeriodo.map((opcaoPeriodo) => {
-                            const selecionado = periodo === opcaoPeriodo;
-                            return (
-                                <Pressable
-                                    key={opcaoPeriodo}
-                                    onPress={() => {
-                                        setPeriodo(opcaoPeriodo);
+                        <Pressable
+                            onPress={() => { setPeriodo("15") }}
+                            style={{
+                                borderWidth: 1,
+                                borderRadius: 8,
+                                width: 56,
+                                height: 40,
+                                backgroundColor: periodo === "15" ? "#a9b9be6c" : "#ffffff",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
 
-                                        if (opcaoPeriodo !== "Outro") {
-                                            setDataNotificacao("");
-                                            setHoraNotificacao("");
-                                            setMinutoNotificacao("");
-                                        }
-                                    }}
-                                    style={{
-                                        paddingVertical: 8,
-                                        paddingHorizontal: 8,
-                                        borderRadius: 8,
-                                        borderWidth: 1,
-                                        borderColor: "#000000",
-                                        backgroundColor: selecionado ? "#444644" : "#ffffff",
-                                    }}
-                                >
-                                    <Text
-                                        style={{
-                                            color: selecionado ? "#ffffff" : "#333333",
-                                            fontWeight: selecionado ? "700" : "400",
-                                        }}
-                                    >
-                                        {opcaoPeriodo}
-                                    </Text>
+                        >
+                            <Text
+                                style={{
+                                    fontFamily: "GoogleSans_400Regular",
+                                    includeFontPadding: false,
+                                }}
+                            >
+                                15Min
+                            </Text>
+                        </Pressable>
+                        <Pressable
+                            onPress={() => { setPeriodo("30") }}
+                            style={{
+                                borderWidth: 1,
+                                borderRadius: 8,
+                                width: 56,
+                                height: 40,
+                                backgroundColor: periodo === "30" ? "#a9b9be6c" : "#ffffff",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
 
-                                </Pressable>
-                            );
+                        >
+                            <Text
+                                style={{
+                                    fontFamily: "GoogleSans_400Regular",
+                                    includeFontPadding: false,
+                                }}
+                            >
+                                30Min
+                            </Text>
+                        </Pressable>
 
-                        })}
+                        <Pressable
+                            onPress={() => { setPeriodo("60") }}
+                            style={{
+                                borderWidth: 1,
+                                borderRadius: 8,
+                                width: 56,
+                                height: 40,
+                                backgroundColor: periodo === "60" ? "#a9b9be6c" : "#ffffff",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
+
+                        >
+                            <Text
+                                style={{
+                                    fontFamily: "GoogleSans_400Regular",
+                                    includeFontPadding: false,
+                                }}
+                            >
+                                1h
+                            </Text>
+                        </Pressable>
+                        <Pressable
+                            onPress={() => { setPeriodo("Outro") }}
+                            style={{
+                                borderWidth: 1,
+                                borderRadius: 8,
+                                width: 56,
+                                height: 40,
+                                backgroundColor: periodo === "Outro" ? "#a9b9be6c" : "#ffffff",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
+
+                        >
+                            <Text
+                                style={{
+                                    fontFamily: "GoogleSans_400Regular",
+                                    includeFontPadding: false,
+                                }}
+                            >
+                                Outro
+                            </Text>
+                        </Pressable>
+
                     </View>
 
                     {periodo === "Outro" ? (
@@ -293,7 +356,7 @@ export default function AddTarefa() {
                                 >
                                     <Text
                                         style={{
-                                            
+
                                             fontSize: 14,
                                             fontFamily: "GoogleSans_400Regular",
                                             color: dataNotificacao ? "#000000" : "#777777",
@@ -385,35 +448,38 @@ export default function AddTarefa() {
                 </View>
             </ScrollView >
 
-            <Pressable
-                onPress={handleSalvarTarefa}
-                style={({ pressed }) => ({
-                    position: 'absolute',
-                    left: 16,
-                    right: 16,
-                    bottom: 60,
-                    paddingVertical: 14,
-                    paddingHorizontal: 22,
-                    borderWidth: 1,
-                    borderColor: '#000000',
-                    borderRadius: 32,
-                    backgroundColor: pressed ? '#e6ebe5' : '#188b01',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                })}
-            >
-                <Text
-                    style={{
-                        fontSize: 16,
-                        lineHeight: 20,
-                        fontFamily: 'GoogleSans_400Regular',
-                        textAlign: 'center',
-                        includeFontPadding: false,
-                    }}
+            <View
+                style={{
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginBottom: 100  
+                }}>
+                <Pressable
+                    onPress={handleSalvarTarefa}
+                    style={({ pressed }) => ({
+                        width: 200,
+                        height: 48,
+                        borderWidth: 1,
+                        borderColor: "#000000",
+                        borderRadius: 32,
+                        backgroundColor: pressed ? "#e6ebe5" : "#188b01",
+                        alignItems: "center",
+                        justifyContent: "center",
+                    })}
                 >
-                    Salvar
-                </Text>
-            </Pressable>
+                    <Text
+                        style={{
+                            fontSize: 16,
+                            lineHeight: 20,
+                            fontFamily: 'GoogleSans_400Regular',
+                            textAlign: 'center',
+                            includeFontPadding: false,
+                        }}
+                    >
+                        Salvar
+                    </Text>
+                </Pressable>
+            </View>
         </>
     );
 }
