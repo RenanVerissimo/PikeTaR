@@ -1,7 +1,6 @@
 import { Tarefa } from "../types/tipagem";
 
-const API_URL = (process.env.EXPO_PUBLIC_API_URL || "http://localhost:3000").replace(/\/$/, "");
-
+const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 export async function buscarTarefas(): Promise<Tarefa[]> {
     const response = await fetch(`${API_URL}/tarefas`);
@@ -28,7 +27,6 @@ export async function adicionarTarefa(tarefa: Tarefa) {
 
     return await response.json();
 }
-
 
 export async function deleteTarefa(id: number) {
     const response = await fetch(`${API_URL}/tarefas/${id}`, {
