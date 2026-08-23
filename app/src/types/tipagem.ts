@@ -1,7 +1,7 @@
 export type Tarefa = {
-  id: number;
+  id?: number;
   prioridade: string;
-  descricao: string;
-  dataAtual: string;
-  dataCompleta: string;
+  descricaoTarefa: string;
+  dataCriacao: string;
+  dataAgendamento: string;
 };

@@ -11,6 +11,7 @@ import {
 } from '@expo-google-fonts/google-sans';
 
 import React from 'react';
+import { adicionarTarefa } from '../services/api';
 
 export default function AddTarefa() {
     const [textoTarefa, SetTextoTarefa] = useState("");
@@ -33,12 +34,37 @@ export default function AddTarefa() {
 
 
 
-    function handleSalvarTarefa() {
-        
+    async function handleSalvarTarefa() {
+        const novaTarefa = {
+            prioridade,
+            descricaoTarefa: textoTarefa,
+            dataCriacao: formatarDataMysql(new Date()),
+            dataAgendamento:
+                dataAgendamento
+        };
+
+        await adicionarTarefa(novaTarefa);
 
         exibirToastSucesso("Tarefa adicionada!", "A tarefa foi salva com sucesso.");
     }
 
+    const dataAgendamentoCalculada = new Date();
+    dataAgendamentoCalculada.setMinutes(
+        dataAgendamentoCalculada.getMinutes() + Number(periodo)
+    );
+
+    const dataAgendamento = formatarDataMysql(dataAgendamentoCalculada);
+
+    function formatarDataMysql(data: Date) {
+        const ano = data.getFullYear();
+        const mes = String(data.getMonth() + 1).padStart(2, "0");
+        const dia = String(data.getDate()).padStart(2, "0");
+        const hora = String(data.getHours()).padStart(2, "0");
+        const minuto = String(data.getMinutes()).padStart(2, "0");
+        const segundo = String(data.getSeconds()).padStart(2, "0");
+
+        return `${ano}-${mes}-${dia} ${hora}:${minuto}:${segundo}`;
+    }
     function voltar() {
         console.log('Voltar para a tela inicial');
         router.push('/')
@@ -123,7 +149,7 @@ export default function AddTarefa() {
                     paddingBottom: 16,
                     backgroundColor: "#a9b9be6c",
                     width: 330,
-                    
+
 
                 }}
             >
@@ -232,7 +258,7 @@ export default function AddTarefa() {
                     paddingVertical: 12,
                     width: 330,
                     minHeight: 120,
-                    
+
                 }}
             >
 
@@ -465,7 +491,7 @@ export default function AddTarefa() {
             <View
                 style={{
                     alignItems: "center",
-                    justifyContent: "center", 
+                    justifyContent: "center",
                     padding: 10
                 }}>
                 <Pressable
