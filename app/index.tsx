@@ -1,30 +1,92 @@
 import { useRouter } from 'expo-router';
 import { Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import { tarefas } from './src/utils/mock';
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import React from 'react';
-import { buscarTarefas } from './src/services/api';
+import { buscarTarefas, deleteTarefa } from './src/services/api';
+import { Tarefa } from './src/types/tipagem';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function Home() {
   const router = useRouter();
-  const [listaTarefas, setListaTarefas] = useState(tarefas);
+  const [listaTarefas, setListaTarefas] = useState<Tarefa[]>([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erroCarregamento, setErroCarregamento] = useState("");
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id?: number) => {
+    if (!id) {
+      return;
+    }
+
+    const tarefasAntesDeExcluir = listaTarefas;
+
     setListaTarefas((tarefasAtuais) =>
       tarefasAtuais.filter((tarefa) => tarefa.id !== id)
     );
+
+    try {
+      await deleteTarefa(id);
+    } catch (erro) {
+      console.error("Erro ao excluir tarefa:", erro);
+      setListaTarefas(tarefasAntesDeExcluir);
+      setErroCarregamento("Nao foi possivel excluir a tarefa.");
+    }
   };
 
   async function carregarTarefas() {
-    const tarefas = await buscarTarefas();
-    console.log("Listagem", tarefas);
+    try {
+      setCarregando(true);
+      setErroCarregamento("");
 
+      const tarefas = await buscarTarefas();
+      setListaTarefas(tarefas);
+    } catch (erro) {
+      console.error("Erro ao carregar tarefas:", erro);
+      setErroCarregamento("Nao foi possivel carregar as tarefas.");
+    } finally {
+      setCarregando(false);
+    }
   }
 
-  useEffect(() => {
-    carregarTarefas();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      carregarTarefas();
+    }, [])
+  );
+
+  function getCoresPrioridade(prioridade: string) {
+    const prioridadeNormalizada = prioridade
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+
+    if (prioridadeNormalizada === "alta") {
+      return {
+        cor: "#ef4444",
+        fundo: "#fee2e2",
+      };
+    }
+
+    if (prioridadeNormalizada === "media") {
+      return {
+        cor: "#eab308",
+        fundo: "#fef9c3",
+      };
+    }
+
+    return {
+      cor: "#22c55e",
+      fundo: "#dcfce7",
+    };
+  }
+
+  function formatarData(data: string) {
+    if (!data) {
+      return "";
+    }
+
+    return data.replace("T", " ").slice(0, 16);
+  }
 
   return (
     <ScrollView
@@ -116,6 +178,42 @@ export default function Home() {
 
 
       <View style={{ gap: 12, top: 42 }}>
+        {carregando ? (
+          <Text
+            style={{
+              color: '#64748b',
+              fontSize: 14,
+              textAlign: 'center',
+            }}
+          >
+            Carregando tarefas...
+          </Text>
+        ) : null}
+
+        {erroCarregamento ? (
+          <Text
+            style={{
+              color: '#dc2626',
+              fontSize: 14,
+              textAlign: 'center',
+            }}
+          >
+            {erroCarregamento}
+          </Text>
+        ) : null}
+
+        {!carregando && !erroCarregamento && listaTarefas.length === 0 ? (
+          <Text
+            style={{
+              color: '#64748b',
+              fontSize: 14,
+              textAlign: 'center',
+            }}
+          >
+            Nenhuma tarefa cadastrada.
+          </Text>
+        ) : null}
+
         {listaTarefas.map((tarefa) => (
           <Swipeable
             key={tarefa.id}
@@ -166,7 +264,7 @@ export default function Home() {
               <View
                 style={{
                   alignSelf: 'stretch',
-                  backgroundColor: tarefa.cor,
+                  backgroundColor: getCoresPrioridade(tarefa.prioridade).cor,
                   width: 6,
                 }}
               />
@@ -179,7 +277,7 @@ export default function Home() {
                     fontWeight: '500',
                   }}
                 >
-                  {tarefa.descricao}
+                  {tarefa.descricaoTarefa}
                 </Text>
                 <Text
                   style={{
@@ -189,14 +287,14 @@ export default function Home() {
                     marginTop: 4,
                   }}
                 >
-                  {/* {tarefa.hora} */}
+                  {formatarData(tarefa.dataAgendamento)}
                 </Text>
               </View>
 
               <View
                 style={{
                   alignItems: 'center',
-                  backgroundColor: tarefa.fundo,
+                  backgroundColor: getCoresPrioridade(tarefa.prioridade).fundo,
                   borderRadius: 999,
                   flexDirection: 'row',
                   gap: 6,
@@ -206,7 +304,7 @@ export default function Home() {
               >
                 <View
                   style={{
-                    backgroundColor: tarefa.cor,
+                    backgroundColor: getCoresPrioridade(tarefa.prioridade).cor,
                     borderRadius: 999,
                     height: 8,
                     width: 8,
@@ -220,7 +318,7 @@ export default function Home() {
                     textTransform: 'uppercase',
                   }}
                 >
-                  {tarefa.importancia}
+                  {tarefa.prioridade}
                 </Text>
               </View>
             </View>
@@ -230,3 +328,4 @@ export default function Home() {
     </ScrollView >
   );
 }
+

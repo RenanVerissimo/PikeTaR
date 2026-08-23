@@ -21,8 +21,7 @@ export default function AddTarefa() {
         GoogleSans_400Regular
     });
     const [prioridade, setPrioridade] = useState("");
-    const opcoesPrioridade = ["Alto", "Médio", "Baixo"];
-    const opcoesPeriodo = ["15min", "30min", "1hora", "Outro"]
+    const opcoesPrioridade = ["Alta", "Média", "Baixa"];
     const [periodo, setPeriodo] = useState("");
     const [dataNotificacao, setDataNotificacao] = useState("");
     const [horaNotificacao, setHoraNotificacao] = useState("");
@@ -171,11 +170,11 @@ export default function AddTarefa() {
                     {opcoesPrioridade.map((opcao) => {
                         const selecionado = prioridade === opcao;
                         const corPrioridade =
-                            opcao === "Alto"
-                                ? "#dc2626" // vermelho
-                                : opcao === "Médio"
-                                    ? "#facc15" // amarelo
-                                    : "#93c5fd"; // azul fraco
+                            opcao === "Alta"
+                                ? "#ef4444"
+                                : opcao === "Média"
+                                    ? "#eab308"
+                                    : "#22c55e";
 
                         return (
                             <Pressable

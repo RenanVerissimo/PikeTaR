@@ -32,4 +32,23 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const [resultado] = await db.query(
+      "DELETE FROM tarefa WHERE id = ?",
+      [id]
+    );
+
+    res.json({
+      mensagem: "Tarefa excluída com sucesso",
+      linhasAfetadas: resultado.affectedRows,
+    });
+  } catch (erro) {
+    console.error("Erro ao excluir tarefa:", erro);
+    res.status(500).json({ erro: "Erro ao excluir tarefa" });
+  }
+});
+
 module.exports = router;
