@@ -1,5 +1,4 @@
 import { Tarefa } from "../types/tipagem";
-require("dotenv").config();
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 

@@ -5,7 +5,9 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    const [tarefas] = await db.query("SELECT * FROM tarefa");
+    const [tarefas] = await db.query(
+      "SELECT id_tarefa AS id, prioridade, descricaoTarefa, dataCriacao, dataAgendamento FROM tarefa"
+    );
     res.json(tarefas);
   } catch (erro) {
     console.error("Erro ao buscar tarefas:", erro);
@@ -37,7 +39,7 @@ router.delete("/:id", async (req, res) => {
     const { id } = req.params;
 
     const [resultado] = await db.query(
-      "DELETE FROM tarefa WHERE id = ?",
+      "DELETE FROM tarefa WHERE id_tarefa = ?",
       [id]
     );
 

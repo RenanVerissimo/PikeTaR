@@ -214,19 +214,21 @@ export default function Home() {
           </Text>
         ) : null}
 
-        {listaTarefas.map((tarefa) => (
+        {listaTarefas.map((tarefa, index) => (
           <Swipeable
-            key={tarefa.id}
-            overshootLeft={false}
-            leftThreshold={40}
-            onSwipeableLeftOpen={() => handleDelete(tarefa.id)}
-            renderLeftActions={() => (
+            key={tarefa.id ? `tarefa-${tarefa.id}` : `tarefa-${index}`}
+            overshootRight={false}
+            rightThreshold={40}
+            onSwipeableRightOpen={() => handleDelete(tarefa.id)}
+            renderRightActions={() => (
               <View
                 style={{
                   backgroundColor: '#ff0000',
                   paddingHorizontal: 12,
                   paddingVertical: 8,
                   borderRadius: 8,
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
                 <TouchableOpacity onPress={() => handleDelete(tarefa.id)}>
