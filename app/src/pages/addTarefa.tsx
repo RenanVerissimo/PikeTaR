@@ -125,13 +125,14 @@ export default function AddTarefa() {
             <View
                 style=
                 {{
-                    gap: 4,
+                    gap: 12,
                     borderWidth: 1,
                     borderRadius: 8,
                     padding: 12,
                     paddingBottom: 16,
                     backgroundColor: "#a9b9be6c",
                     width: 330,
+                    
 
                 }}
             >
@@ -145,10 +146,11 @@ export default function AddTarefa() {
                 <View
                     style={{
                         flexDirection: "row",
-                        gap: 12,
+                        gap: 16,
                         justifyContent: "center",
                         marginBottom: 12,
                         borderWidth: 0,
+
                         //borderRadius: 8,
                         //padding: 10
 
@@ -200,6 +202,7 @@ export default function AddTarefa() {
                     paddingHorizontal: 12,
                     paddingBottom: 24,
                     width: 330,
+                    gap: 12
                 }}
             >
                 <Text
@@ -209,6 +212,7 @@ export default function AddTarefa() {
                 >
                     DESCREVA A TAREFA
                 </Text>
+
                 <TextInput
                     value={textoTarefa}
                     onChangeText={SetTextoTarefa}
@@ -237,6 +241,7 @@ export default function AddTarefa() {
                     paddingVertical: 12,
                     width: 330,
                     minHeight: 120,
+                    
                 }}
             >
 
@@ -252,7 +257,6 @@ export default function AddTarefa() {
                     flexDirection: "row",
                     alignItems: "center",
                     justifyContent: "center",
-                    marginTop: 8,
                     gap: 10
                 }}>
                     <Pressable
