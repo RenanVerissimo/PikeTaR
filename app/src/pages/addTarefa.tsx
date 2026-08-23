@@ -40,7 +40,9 @@ export default function AddTarefa() {
             descricaoTarefa: textoTarefa,
             dataCriacao: formatarDataMysql(new Date()),
             dataAgendamento:
-                dataAgendamento
+                periodo === "Outro"
+                    ? formatDataHora()
+                    : periodosCalculados()
         };
 
         await adicionarTarefa(novaTarefa);
@@ -76,24 +78,17 @@ export default function AddTarefa() {
 
         dataMaisPeriodo.setMinutes(dataMaisPeriodo.getMinutes() + Number(periodo));
 
-        const dataFormatada = dataMaisPeriodo.toLocaleString("pt-BR", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-        });
-
-        return dataFormatada;
+        return formatarDataMysql(dataMaisPeriodo);
     }
 
     function formatDataHora() {
-        const data = dataSelecionada.toLocaleDateString("pt-BR");
-        const hora = horaNotificacao;
-        const minuto = minutoNotificacao;
+        const data = new Date(dataSelecionada);
 
+        data.setHours(Number(horaNotificacao));
+        data.setMinutes(Number(minutoNotificacao));
+        data.setSeconds(0);
 
-        return "data: " + data + " hora: " + hora + " minuto: " + minuto;
+        return formatarDataMysql(data);
     }
 
     return (

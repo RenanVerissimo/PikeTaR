@@ -2,8 +2,9 @@ import { useRouter } from 'expo-router';
 import { Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { tarefas } from './src/utils/mock';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import React from 'react';
+import { buscarTarefas } from './src/services/api';
 
 export default function Home() {
   const router = useRouter();
@@ -14,6 +15,16 @@ export default function Home() {
       tarefasAtuais.filter((tarefa) => tarefa.id !== id)
     );
   };
+
+  async function carregarTarefas() {
+    const tarefas = await buscarTarefas();
+    console.log("Listagem", tarefas);
+
+  }
+
+  useEffect(() => {
+    carregarTarefas();
+  }, []);
 
   return (
     <ScrollView
