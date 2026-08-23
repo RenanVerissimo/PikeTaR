@@ -28,9 +28,9 @@ app.get("/teste-db", async (req, res) => {
   }
 });
 
-const tarefasRoutes = require("./src/routes/tarefas");
+const tarefaRoutes = require("./src/routes/tarefas");
 
-app.use("/tarefas", tarefasRoutes);
+app.use("/tarefa", tarefaRoutes);
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Servidor rodando na porta ${PORT}`);

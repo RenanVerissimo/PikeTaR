@@ -3,7 +3,7 @@ import { Tarefa } from "../types/tipagem";
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 export async function buscarTarefas(): Promise<Tarefa[]> {
-    const response = await fetch(`${API_URL}/tarefas`);
+    const response = await fetch(`${API_URL}/tarefa`);
 
     if (!response.ok) {
         throw new Error("Erro ao buscar tarefas");
@@ -13,7 +13,7 @@ export async function buscarTarefas(): Promise<Tarefa[]> {
 }
 
 export async function adicionarTarefa(tarefa: Tarefa) {
-    const response = await fetch(`${API_URL}/tarefas`, {
+    const response = await fetch(`${API_URL}/tarefa`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -29,7 +29,7 @@ export async function adicionarTarefa(tarefa: Tarefa) {
 }
 
 export async function deleteTarefa(id: number) {
-    const response = await fetch(`${API_URL}/tarefas/${id}`, {
+    const response = await fetch(`${API_URL}/tarefa/${id}`, {
         method: "DELETE",
     });
 
