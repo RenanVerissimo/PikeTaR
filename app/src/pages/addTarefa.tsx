@@ -348,7 +348,7 @@ export default function AddTarefa() {
                         style={{
                             borderWidth: 1,
                             borderRadius: 8,
-                            width: 66,
+                            width: 68,
                             height: 40,
                             backgroundColor: periodo === "Outro" ? "#a9b9be6c" : "#ffffff",
                             alignItems: "center",
