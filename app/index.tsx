@@ -84,13 +84,12 @@ function formatarData(data: string) {
         return "";
     }
 
-    return new Date(data).toLocaleString("pt-BR", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-    });
+    const dataLimpa = data.replace("T", " ").replace(".000Z", "").slice(0, 16);
+
+    const [parteData, parteHora] = dataLimpa.split(" ");
+    const [ano, mes, dia] = parteData.split("-");
+
+    return `${dia}/${mes}/${ano} ${parteHora}`;
 }
 
   return (
