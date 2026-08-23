@@ -24,7 +24,7 @@
         "android.permission.RECORD_AUDIO",
         "android.permission.MODIFY_AUDIO_SETTINGS"
       ],
-      "package": "com.renanverissimo.Pike"
+      "package": "com.renanverissimo.PikeTaR"
     },
     "web": {
       "output": "static",
