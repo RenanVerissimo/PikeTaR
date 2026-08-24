@@ -64,7 +64,7 @@ export default function AddTarefa() {
         };
 
         try {
-            await agendarNotificacaoTarefa(textoTarefa, converterDataMysqlParaDate(dataAgendamento));
+            await agendarNotificacaoTarefa(textoTarefa, converterDataMysqlParaDate(dataAgendamento), prioridade);
         } catch (erro) {
             console.error("Erro ao agendar notificacao:", erro);
             exibirToastErro("Erro!", "Nao foi possivel agendar a notificacao.");
@@ -229,7 +229,7 @@ export default function AddTarefa() {
                                 ? "#ef4444"
                                 : opcao === "Média"
                                     ? "#eab308"
-                                    : "#22c55e";
+                                    : "#006eff";
 
                         return (
                             <Pressable

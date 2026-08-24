@@ -50,7 +50,7 @@ export async function prepararNotificacoes() {
   return true;
 }
 
-export async function agendarNotificacaoTarefa(titulo: string, dataAgendamento: Date) {
+export async function agendarNotificacaoTarefa(titulo: string, dataAgendamento: Date, prioridade: string) {
   const permitido = await prepararNotificacoes();
 
   if (!permitido) {
@@ -71,7 +71,7 @@ export async function agendarNotificacaoTarefa(titulo: string, dataAgendamento: 
   await scheduleNotificationAsync({
     content: {
       title: 'Tarefa',
-      body: titulo,
+      body: `${titulo} - Prioridade: ${prioridade}`,
       sound: true,
     },
     trigger: {
