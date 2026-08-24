@@ -1,8 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-console.log("DB_NAME usado pelo backend:", process.env.DB_NAME);
-console.log("DB_HOST usado pelo backend:", process.env.DB_HOST);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
