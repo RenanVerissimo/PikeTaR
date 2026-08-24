@@ -1,26 +1,12 @@
 import { Alert, Platform } from 'react-native';
-import Constants from 'expo-constants';
-
-function estaNoExpoGoAndroid() {
-  return Platform.OS === 'android' && Constants.appOwnership === 'expo';
-}
 
 export async function prepararNotificacoes() {
-  if (Platform.OS === 'web') {
-    return false;
-  }
+  const { setNotificationHandler } = await import('expo-notifications/build/NotificationsHandler');
+  const { getPermissionsAsync, requestPermissionsAsync } = await import(
+    'expo-notifications/build/NotificationPermissions'
+  );
 
-  if (estaNoExpoGoAndroid()) {
-    Alert.alert(
-      'Expo Go limitado',
-      'No Android, teste notificacoes no APK ou em uma development build.'
-    );
-    return false;
-  }
-
-  const Notifications = await import('expo-notifications');
-
-  Notifications.setNotificationHandler({
+  setNotificationHandler({
     handleNotification: async () => ({
       shouldShowBanner: true,
       shouldShowList: true,
@@ -30,19 +16,26 @@ export async function prepararNotificacoes() {
   });
 
   if (Platform.OS === 'android') {
-    await Notifications.setNotificationChannelAsync('default', {
+    const { default: setNotificationChannelAsync } = await import(
+      'expo-notifications/build/setNotificationChannelAsync'
+    );
+    const { AndroidImportance } = await import(
+      'expo-notifications/build/NotificationChannelManager.types'
+    );
+
+    await setNotificationChannelAsync('default', {
       name: 'default',
-      importance: Notifications.AndroidImportance.MAX,
+      importance: AndroidImportance.MAX,
       vibrationPattern: [0, 250, 250, 250],
       lightColor: '#1d4ed8',
     });
   }
 
-  const { status: statusAtual } = await Notifications.getPermissionsAsync();
+  const { status: statusAtual } = await getPermissionsAsync();
   let statusFinal = statusAtual;
 
   if (statusAtual !== 'granted') {
-    const { status } = await Notifications.requestPermissionsAsync();
+    const { status } = await requestPermissionsAsync();
     statusFinal = status;
   }
 
@@ -58,10 +51,6 @@ export async function prepararNotificacoes() {
 }
 
 export async function agendarNotificacaoTarefa(titulo: string, dataAgendamento: Date) {
-  if (Platform.OS === 'web' || estaNoExpoGoAndroid()) {
-    return;
-  }
-
   const permitido = await prepararNotificacoes();
 
   if (!permitido) {
@@ -72,16 +61,21 @@ export async function agendarNotificacaoTarefa(titulo: string, dataAgendamento: 
     throw new Error('A data da notificacao precisa estar no futuro.');
   }
 
-  const Notifications = await import('expo-notifications');
+  const { default: scheduleNotificationAsync } = await import(
+    'expo-notifications/build/scheduleNotificationAsync'
+  );
+  const { SchedulableTriggerInputTypes } = await import(
+    'expo-notifications/build/Notifications.types'
+  );
 
-  await Notifications.scheduleNotificationAsync({
+  await scheduleNotificationAsync({
     content: {
       title: 'Tarefa',
       body: titulo,
       sound: true,
     },
     trigger: {
-      type: Notifications.SchedulableTriggerInputTypes.DATE,
+      type: SchedulableTriggerInputTypes.DATE,
       date: dataAgendamento,
     },
   });

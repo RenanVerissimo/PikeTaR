@@ -79,9 +79,9 @@ export default function Home() {
     };
   }
 
-function formatarData(data: string) {
+  function formatarData(data: string) {
     if (!data) {
-        return "";
+      return "";
     }
 
     const dataLimpa = data.replace("T", " ").replace(".000Z", "").slice(0, 16);
@@ -90,15 +90,16 @@ function formatarData(data: string) {
     const [ano, mes, dia] = parteData.split("-");
 
     return `${dia}/${mes}/${ano} ${parteHora}`;
-}
+  }
 
   return (
     <ScrollView
       contentContainerStyle={{
         backgroundColor: '#f8fafc',
         padding: 24,
-        paddingTop: 64,
+        paddingTop: 42,
         flexGrow: 1,
+        paddingBottom: 70,
       }}
     >
       <View
@@ -178,7 +179,7 @@ function formatarData(data: string) {
       </View>
 
 
-      <View style={{ gap: 12, top: 42 }}>
+      <View style={{ gap: 12, top: 20 }}>
         {carregando ? (
           <Text
             style={{
