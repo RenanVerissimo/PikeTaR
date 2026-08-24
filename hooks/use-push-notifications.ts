@@ -1,20 +1,33 @@
-import { useEffect } from 'react';
 import { Alert, Platform } from 'react-native';
-import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowBanner: true,
-    shouldShowList: true,
-    shouldPlaySound: true,
-    shouldSetBadge: false,
-  }),
-});
+function estaNoExpoGoAndroid() {
+  return Platform.OS === 'android' && Constants.appOwnership === 'expo';
+}
 
 export async function prepararNotificacoes() {
   if (Platform.OS === 'web') {
     return false;
   }
+
+  if (estaNoExpoGoAndroid()) {
+    Alert.alert(
+      'Expo Go limitado',
+      'No Android, teste notificacoes no APK ou em uma development build.'
+    );
+    return false;
+  }
+
+  const Notifications = await import('expo-notifications');
+
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowBanner: true,
+      shouldShowList: true,
+      shouldPlaySound: true,
+      shouldSetBadge: false,
+    }),
+  });
 
   if (Platform.OS === 'android') {
     await Notifications.setNotificationChannelAsync('default', {
@@ -45,7 +58,7 @@ export async function prepararNotificacoes() {
 }
 
 export async function agendarNotificacaoTarefa(titulo: string, dataAgendamento: Date) {
-  if (Platform.OS === 'web') {
+  if (Platform.OS === 'web' || estaNoExpoGoAndroid()) {
     return;
   }
 
@@ -58,6 +71,8 @@ export async function agendarNotificacaoTarefa(titulo: string, dataAgendamento: 
   if (dataAgendamento.getTime() <= Date.now()) {
     throw new Error('A data da notificacao precisa estar no futuro.');
   }
+
+  const Notifications = await import('expo-notifications');
 
   await Notifications.scheduleNotificationAsync({
     content: {
@@ -73,9 +88,5 @@ export async function agendarNotificacaoTarefa(titulo: string, dataAgendamento: 
 }
 
 export function usePushNotifications() {
-  useEffect(() => {
-    prepararNotificacoes().catch((erro) => {
-      console.warn('Erro ao preparar notificacoes:', erro);
-    });
-  }, []);
+  return;
 }
