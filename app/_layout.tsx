@@ -4,9 +4,13 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Toast from 'react-native-toast-message';
 
 import { toastConfig } from '../src/utils/toastConfig';
-import { iniciarBanco } from '@/src/database/database';
+import { db, iniciarBanco } from '@/src/database/database';
+import { useDrizzleStudio } from "expo-drizzle-studio-plugin";
+
 
 export default function RootLayout() {
+  useDrizzleStudio(db);
+
   useEffect(() => {
     iniciarBanco()
       .then(() => {

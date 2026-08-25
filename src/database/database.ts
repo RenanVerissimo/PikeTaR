@@ -1,20 +1,18 @@
 import * as SQLite from "expo-sqlite";
 
+export const db = SQLite.openDatabaseSync("piketar.db");
 export const dbPromise = SQLite.openDatabaseAsync("piketar.db");
 
 export async function iniciarBanco() {
-    const db = await dbPromise;
+    const banco = await dbPromise;
 
-    await db.execAsync(`
-        PRAGMA journal_mode = WAL;
-
+    await banco.execAsync(`
         CREATE TABLE IF NOT EXISTS tarefa (
-            id_tarefa INTEGER PRIMARY KEY AUTOINCREMENT,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             prioridade TEXT NOT NULL,
             descricaoTarefa TEXT NOT NULL,
             dataCriacao TEXT NOT NULL,
-            dataAgendamento TEXT NOT NULL,
-            notificacaoId TEXT
+            dataAgendamento TEXT NOT NULL
         );
     `);
 }
