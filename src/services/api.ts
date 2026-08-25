@@ -26,12 +26,12 @@ export async function adicionarTarefa(tarefa: Tarefa) {
     }
 }
 
-export async function deletarTarefa(id: number) {
+export async function deleteTarefa(id: number) {
     const response = await fetch(`${API_URL}/tarefa/${id}`, {
         method: "DELETE",
     });
 
     if (!response.ok) {
-        throw new Error(`Erro ao excluir tarefa: ${response.status}`);
+        throw new Error("Erro ao excluir tarefa");
     }
 }
