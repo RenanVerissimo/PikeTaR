@@ -1,37 +1,54 @@
+import { dbPromise } from "../database/database";
 import { Tarefa } from "../types/tipagem";
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 export async function buscarTarefas(): Promise<Tarefa[]> {
-    const response = await fetch(`${API_URL}/tarefa`);
 
-    if (!response.ok) {
-        throw new Error("Erro ao buscar tarefas");
-    }
+    const db = await dbPromise;
 
-    return await response.json();
+    const tarefas = await db.getAllAsync<Tarefa>(`
+        SELECT *
+        FROM tarefa
+        ORDER BY dataAgendamento ASC
+    `);
+
+    return tarefas;
 }
+
 
 export async function adicionarTarefa(tarefa: Tarefa) {
-    const response = await fetch(`${API_URL}/tarefa`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(tarefa),
-    });
 
-    if (!response.ok) {
-        throw new Error(`Erro ao adicionar tarefa: ${response.status}`);
-    }
+    const db = await dbPromise;
+
+    const resultado = await db.runAsync(
+        `
+        INSERT INTO tarefa (
+            prioridade,
+            descricaoTarefa,
+            dataCriacao,
+            dataAgendamento
+        )
+        VALUES (?, ?, ?, ?)
+        `,
+        tarefa.prioridade,
+        tarefa.descricaoTarefa,
+        tarefa.dataCriacao,
+        tarefa.dataAgendamento
+    );
+
+    return resultado.lastInsertRowId;
 }
 
-export async function deleteTarefa(id: number) {
-    const response = await fetch(`${API_URL}/tarefa/${id}`, {
-        method: "DELETE",
-    });
 
-    if (!response.ok) {
-        throw new Error("Erro ao excluir tarefa");
-    }
+export async function deleteTarefa(id: number) {
+
+    const db = await dbPromise;
+
+    await db.runAsync(
+        `
+        DELETE FROM tarefa
+        WHERE id = ?
+        `,
+        id
+    );
 }
