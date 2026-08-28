@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "9abe52ca-5800-49a1-834a-d80c2eaba972"
+      }
+    },
+    "android": {
+      "package": "com.renanverissimo.piketarbackend"
+    }
+  }
+}
