@@ -11,6 +11,7 @@ router.get("/", async (req, res) => {
 
     res.json(tarefas);
 
+    
   } catch (erro) {
     console.error("Erro ao buscar tarefas:", erro);
 
